@@ -5,6 +5,8 @@ embedded applications using JavaScript and leveraging the Node ecosystem.
 
 Master build status: [![Build Status](https://travis-ci.org/jxcore/jxcore.svg?branch=master)](https://travis-ci.org/jxcore/jxcore)
 
+Private Master build status [![Build Status](https://travis-ci.org/thaliproject/jxcore.svg?branch=master)](https://travis-ci.org/thaliproject/jxcore)
+
 ### Features include
 
   - Support for core Node.JS features
