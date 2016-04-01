@@ -196,7 +196,7 @@ var gonpm = function () {
 
 jxcore.utils.console.log("Downloading NPM for JXcore", "yellow");
 
-download("https://s3.amazonaws.com/nodejx/npmjx311.tar.gz", npmloc + ".tar.gz", function () {
+download("https://jxcore.azureedge.net/npmjx/npmjx312.tar.gz", npmloc + ".tar.gz", function () {
   try {
     var targz = require('tar.gz');
   } catch (ex) {
@@ -204,6 +204,7 @@ download("https://s3.amazonaws.com/nodejx/npmjx311.tar.gz", npmloc + ".tar.gz", 
     process.exit(1);
     return;
   }
+  jxcore.utils.console.log("extracting " + npmloc + ".tar.gz", "yellow");
   extract(npmloc + ".tar.gz", __dirname, function (isdone, msg) {
 
     if (!isdone) {
