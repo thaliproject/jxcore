@@ -45,7 +45,7 @@ exports.setVariables = function() {
   //process.env["SKIP_SASS_BINARY_DOWNLOAD_FOR_CI"] = true
 
   // for node-gyp
-  process.env["NVM_NODEJS_ORG_MIRROR"] = "https://nodejx.s3.amazonaws.com"
+  process.env["NVM_NODEJS_ORG_MIRROR"] = "https://jxcore.azureedge.net"
   process.env["JX_NPM_JXB"] = "jxb311"
 
   // this allows to use for replacement "/full/path/to/jx" rather than only "jx"

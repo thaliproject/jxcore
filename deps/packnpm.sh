@@ -1,5 +1,5 @@
 #!/bin/sh
-VER=312
+VER=311
 tar -zcvf npmjx$VER.tar.gz npm
 cp npmjx$VER.tar.gz ~/.jx/
 cd ~/.jx/

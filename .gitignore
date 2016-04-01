@@ -107,3 +107,4 @@ icu_config.gypi
 
 icu_config.gypi
 *.opendb
+browse.VC.db
