@@ -108,3 +108,8 @@ icu_config.gypi
 icu_config.gypi
 *.opendb
 browse.VC.db
+
+# files that are created at build time from templates
+deps/npm/lib/_jx.js
+lib/jx/_jx_install.js
+tools/npmjx/index.js

@@ -167,6 +167,17 @@ SETLOCAL
 ENDLOCAL
 
 :msbuild
+SETLOCAL
+  call :getpythonversion
+  if errorlevel 1 goto exit
+  
+  cd build_scripts\replace_urls\
+  echo %cd%
+  python replace_urls.py lib-jx-_jx_install.js.template
+  if errorlevel 1 goto replace-url-failed
+  echo NPM Url replaced
+ENDLOCAL
+
 @rem Build the sln with msbuild.
 msbuild jx.sln /m /t:%target% /p:Configuration="%config%" %c_platform% /clp:NoSummary;NoItemAndPropertyList;Verbosity=minimal /nologo
 goto exit
@@ -234,6 +245,10 @@ goto exit
 
 :create-msvs-files-failed
 echo Failed to create vc project files. 
+goto exit
+
+:replace-url-failed
+echo Failed to replace urls from template. 
 goto exit
 
 :upload
