@@ -5,8 +5,8 @@
 # npmjx is created running this script from within tools/npmjx.
 # It calls the replace_urls.py script to create index.js and then
 # it compiles nmpjx.jxp to create the npm proxy module.
-# The npm proxy module contains at index.js:199 the url to download
-# the npm module, that url that can be changed by editing:
+# The npm proxy module defines in index.js the url to download
+# the npm module, that url can be changed by editing:
 # build_scripts/replace_urls/tools-npmjx-index.js.template
 # after the template has been change, please re-run this script.
 
