@@ -50,7 +50,7 @@ jx_g: config.gypi out/Makefile
 	ln -fs out/Debug/jx $@
 endif
 
-out/Makefile: common.gypi deps/uv/uv.gyp deps/http_parser/http_parser.gyp deps/zlib/zlib.gyp jx.gyp config.gypi
+out/Makefile: replace-urls common.gypi deps/uv/uv.gyp deps/http_parser/http_parser.gyp deps/zlib/zlib.gyp jx.gyp config.gypi
 ifeq ($(USE_NINJA),1)
 	touch out/Makefile
 	$(PYTHON) tools/gyp_node.py -f ninja
@@ -84,6 +84,9 @@ distclean:
 	-rm -rf node_modules
 	-rm -rf deps/icu
 	-rm -rf deps/icu4c*.tgz deps/icu4c*.zip deps/icu-tmp
+
+replace-urls:
+	-sh ./build_scripts/replace_urls/replace_lib_jx.sh
 
 test: all
 	$(PYTHON) tools/test.py --mode=release simple

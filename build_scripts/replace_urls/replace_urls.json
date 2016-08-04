@@ -1,0 +1,30 @@
+{
+	"files": [{
+		"template": "tools-npmjx-index.js.template",
+		"destination": "../../tools/npmjx/index.js",
+		"url": [{
+			"id": "${NPMJX_URL}",
+			"value": "https://jxcore.azureedge.net/npmjx/npmjx311b.tar.gz"
+		}]
+	}, {
+		"template": "lib-jx-_jx_install.js.template",
+		"destination": "../../lib/jx/_jx_install.js",
+		"url": [{
+			"id": "${NPMJX_PROXY_BASENAME}",
+			"value": "npmjxv311b.jx"
+		}, {
+			"id": "${NPMJX_PROXY_PARENTURL}",
+			"value": "https://jxcore.azureedge.net/npmjx/"
+		}]
+	}, {
+		"template": "deps-npm-lib-_jx.js.template",
+		"destination": "../../deps/npm/lib/_jx.js",
+		"url": [{
+			"id": "${NVM_NODEJS_ORG_MIRROR}",
+			"value": "https://jxcore.azureedge.net"
+		}, {
+			"id": "${JX_NPM_JXB}",
+			"value": "jxb311"
+		}]
+	}]
+}
