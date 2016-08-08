@@ -50,7 +50,7 @@ jx_g: config.gypi out/Makefile
 	ln -fs out/Debug/jx $@
 endif
 
-out/Makefile: replace-urls common.gypi deps/uv/uv.gyp deps/http_parser/http_parser.gyp deps/zlib/zlib.gyp jx.gyp config.gypi
+out/Makefile: lib/jx/_jx_install.js common.gypi deps/uv/uv.gyp deps/http_parser/http_parser.gyp deps/zlib/zlib.gyp jx.gyp config.gypi
 ifeq ($(USE_NINJA),1)
 	touch out/Makefile
 	$(PYTHON) tools/gyp_node.py -f ninja
@@ -75,6 +75,7 @@ clean:
 	-rm -rf out/Makefile jx jx_g out/$(BUILDTYPE)/jx blog.html email.md
 	-find out/ -name '*.o' -o -name '*.a' | xargs rm -rf
 	-rm -rf node_modules
+	-touch build_scripts/replace_urls/replace_urls.json
 
 distclean:
 	-rm -rf out
@@ -84,8 +85,9 @@ distclean:
 	-rm -rf node_modules
 	-rm -rf deps/icu
 	-rm -rf deps/icu4c*.tgz deps/icu4c*.zip deps/icu-tmp
+	-rm lib/jx/_jx_install.js
 
-replace-urls:
+lib/jx/_jx_install.js: build_scripts/replace_urls/replace_urls.json
 	-sh ./build_scripts/replace_urls/replace_lib_jx.sh
 
 test: all
