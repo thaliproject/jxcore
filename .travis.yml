@@ -11,7 +11,7 @@ compiler:
 script:
  # NOTE: trick used here since Travis CI only seems to check the last command result.
  - rm -f checkV8Result
- - ./configure && make
+ - ./configure && make -j 2
  - CITEST=yup make test-simple && echo ok >> checkV8Result
- - ./configure --engine-mozilla && make
+ - ./configure --engine-mozilla && make -j 2
  - CITEST=yup make test-simple && cat checkV8Result
