@@ -4,14 +4,14 @@
 		"destination": "../../tools/npmjx/index.js",
 		"url": [{
 			"id": "${NPMJX_URL}",
-			"value": "https://jxcore.azureedge.net/npmjx/npmjx311b.tar.gz"
+			"value": "https://jxcore.azureedge.net/npmjx/npmjx314.tar.gz"
 		}]
 	}, {
 		"template": "lib-jx-_jx_install.js.template",
 		"destination": "../../lib/jx/_jx_install.js",
 		"url": [{
 			"id": "${NPMJX_PROXY_BASENAME}",
-			"value": "npmjxv311b.jx"
+			"value": "npmjxv314.jx"
 		}, {
 			"id": "${NPMJX_PROXY_PARENTURL}",
 			"value": "https://jxcore.azureedge.net/npmjx/"
