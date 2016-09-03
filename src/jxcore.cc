@@ -353,6 +353,7 @@ char **JXEngine::Init(int argc, char *argv[], bool engine_inited_already) {
     RegisterSignalHandler(SIGPIPE, SIG_IGN);
     RegisterSignalHandler(SIGINT, SignalExit);
     RegisterSignalHandler(SIGTERM, SignalExit);
+    RegisterSignalHandler(SIGSEGV, SignalExit);
 #endif  // __POSIX__
   }
 

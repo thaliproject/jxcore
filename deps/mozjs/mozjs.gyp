@@ -234,7 +234,12 @@
       ],
       'configurations': {
         'Debug': {
-          'defines': [ 'JS_DEBUG' ]
+          'defines': [ 'JS_DEBUG' ],
+          'conditions': [
+            [ 'OS == "linux" and target_arch == "x64"', {
+              'cflags_cc': [ '-fpermissive' ],
+              }],
+          ],
         },
         'Release': {
           'defines': ['NDEBUG'],
