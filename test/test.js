@@ -117,7 +117,6 @@ var addStat = function(ret) {
   } else {
       stats.passed++;
   }
-}
 
   var seconds_delta = (Date.now() - stats.time_started) / 1000;
   stats.minutes_ellapsed = Math.floor(seconds_delta / 60);
