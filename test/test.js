@@ -5,6 +5,7 @@
 // jxcore$ jx test/test.js jxcore
 
 var fs = require('fs'), path = require("path"), cp = require("child_process"), util = require("util");
+var common = require('./common');
 
 var folders = []; // 'simple', 'pummel', 'internet' 'jxcore'
 
@@ -127,11 +128,33 @@ var addStat = function(ret) {
 
 };
 
+var rmdirRecursive = function(path) {
+  if (fs.existsSync(path)) {
+    fs.readdirSync(path).forEach(function(file,index){
+      var curPath = path + "/" + file;
+      if (fs.lstatSync(curPath).isDirectory()) {
+        rmdirRecursive(curPath);
+      } else {
+        fs.unlinkSync(curPath);
+      }
+    });
+    fs.rmdirSync(path);
+  }
+};
+
 var runNextTest = function() {
   if (!allFiles.length) {
     writeStats("Finished.");
     return;
   }
+
+  // Several tests fail if the tmpDir doesn't exist or
+  // if it already contains temp files used by the tests
+  if (fs.existsSync(common.tmpDir)) {
+    rmdirRecursive(common.tmpDir);
+  }
+  fs.mkdirSync(common.tmpDir);
+
   var rec = allFiles.shift(), ret = {
     fname : rec.fname,
     exitCode : 0,
