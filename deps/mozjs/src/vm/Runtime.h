@@ -608,7 +608,7 @@ class PerThreadData : public PerThreadDataFriendFields
         return asmJSActivationStack_;
     }
     static js::AsmJSActivation *innermostAsmJSActivation() {
-        PerThreadData *ptd = TlsPerThreadData.get();
+        PerThreadData *ptd = js::TlsPerThreadData.get();
         return ptd ? ptd->asmJSActivationStack_ : nullptr;
     }
 
@@ -1444,7 +1444,7 @@ namespace js {
 static inline JSContext *
 GetJSContextFromJitCode()
 {
-    JSContext *cx = TlsPerThreadData.get()->jitJSContext;
+    JSContext *cx = js::TlsPerThreadData.get()->jitJSContext;
     JS_ASSERT(cx);
     return cx;
 }
