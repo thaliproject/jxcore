@@ -45,8 +45,6 @@ const char* root_certs[] = {
 #include "node_root_certs.h"  // NOLINT(build/include_order)
     NULL};
 
-bool SSL3_ENABLE = false;
-
 namespace crypto {
 
 // Forcibly clear OpenSSL's error stack on return. This stops stale errors
@@ -182,41 +180,75 @@ JS_METHOD(SecureContext, Init) {
     } else if (strcmp(*sslmethod, "SSLv2_client_method") == 0) {
       THROW_EXCEPTION("SSLv2 methods disabled");
     } else if (strcmp(*sslmethod, "SSLv3_method") == 0) {
-#ifndef OPENSSL_NO_SSL3
-      method = SSLv3_method();
-#else
-      THROW_EXCEPTION("SSLv3 methods are disabled");
-#endif
+      THROW_EXCEPTION("SSLv3 methods disabled");
     } else if (strcmp(*sslmethod, "SSLv3_server_method") == 0) {
-#ifndef OPENSSL_NO_SSL3
-      method = SSLv3_server_method();
-#else
-      THROW_EXCEPTION("SSLv3 methods are disabled");
-#endif
+      THROW_EXCEPTION("SSLv3 methods disabled");
     } else if (strcmp(*sslmethod, "SSLv3_client_method") == 0) {
-#ifndef OPENSSL_NO_SSL3
-      method = SSLv3_client_method();
+      THROW_EXCEPTION("SSLv3 methods disabled");
+    } else if (strcmp(*sslmethod, "TLSv1_method") == 0) {
+      THROW_EXCEPTION("TLSv1 methods disabled");
+    } else if (strcmp(*sslmethod, "TLSv1_server_method") == 0) {
+      THROW_EXCEPTION("TLSv1 methods disabled");
+    } else if (strcmp(*sslmethod, "TLSv1_client_method") == 0) {
+      THROW_EXCEPTION("TLSv1 methods disabled");
+    } else if (strcmp(*sslmethod, "TLSv1_1_method") == 0) {
+#ifndef OPENSSL_NO_TLS1_1
+      method=TLSv1_1_method();
 #else
-      THROW_EXCEPTION("SSLv3 methods are disabled");
+      THROW_EXCEPTION("TLSv1_1 methods disabled");
+#endif
+    } else if (strcmp(*sslmethod, "TLSv1_1_server_method") == 0) {
+#ifndef OPENSSL_NO_TLS1_1
+      method=TLSv1_1_server_method();
+#else
+      THROW_EXCEPTION("TLSv1_1 methods disabled");
+#endif
+    } else if (strcmp(*sslmethod, "TLSv1_1_client_method") == 0) {
+#ifndef OPENSSL_NO_TLS1_1
+      method=TLSv1_1_client_method();
+#else
+      THROW_EXCEPTION("TLSv1_1 methods disabled");
+#endif
+    } else if (strcmp(*sslmethod, "TLSv1_2_method") == 0) {
+#ifndef OPENSSL_NO_TLS1_2
+      method=TLSv1_2_method();
+#else
+      THROW_EXCEPTION("TLSv1_2 methods disabled");
+#endif
+    } else if (strcmp(*sslmethod, "TLSv1_2_server_method") == 0) {
+#ifndef OPENSSL_NO_TLS1_2
+      method=TLSv1_2_server_method();
+#else
+      THROW_EXCEPTION("TLSv1_2 methods disabled");
+#endif
+    } else if (strcmp(*sslmethod, "TLSv1_2_client_method") == 0) {
+#ifndef OPENSSL_NO_TLS1_2
+      method=TLSv1_2_client_method();
+#else
+      THROW_EXCEPTION("TLSv1_2 methods disabled");
 #endif
     } else if (strcmp(*sslmethod, "SSLv23_method") == 0) {
-      method = SSLv23_method();
-    } else if (strcmp(*sslmethod, "SSLv23_server_method") == 0) {
-      method = SSLv23_server_method();
-    } else if (strcmp(*sslmethod, "SSLv23_client_method") == 0) {
-      method = SSLv23_client_method();
-    } else if (strcmp(*sslmethod, "TLSv1_method") == 0) {
-      method = TLSv1_method();
-    } else if (strcmp(*sslmethod, "TLSv1_server_method") == 0) {
-      method = TLSv1_server_method();
-    } else if (strcmp(*sslmethod, "TLSv1_client_method") == 0) {
-      method = TLSv1_client_method();
+      method=SSLv23_method();
+    } else if (strcmp(*sslmethod, "SSLv23_server_method") ==0) {
+      method=SSLv23_server_method();
+    } else if (strcmp(*sslmethod, "SSLv23_client_method") ==0) {
+      method=SSLv23_client_method();
     } else {
       THROW_EXCEPTION("Unknown method");
     }
   }
 
   sc->ctx_ = SSL_CTX_new(method);
+    
+  long options = SSL_CTX_get_options(sc->ctx_);
+  if (options & SSL_OP_NO_SSLv2)
+    options |= SSL_OP_NO_SSLv2;
+  if (options & SSL_OP_NO_SSLv3)
+    options |= SSL_OP_NO_SSLv3;
+  if (options & SSL_OP_NO_TLSv1)
+    options |= SSL_OP_NO_TLSv1;
+
+  SSL_CTX_set_options(sc->ctx_,options);
 
   // SSL session cache configuration
   SSL_CTX_set_session_cache_mode(sc->ctx_, SSL_SESS_CACHE_SERVER |
@@ -4455,8 +4487,6 @@ DECLARE_CLASS_INITIALIZER(InitCrypto) {
 
   JS_METHOD_SET(target, "publicEncrypt", PublicKeyCipher::PublicEncrypt);
   JS_METHOD_SET(target, "privateDecrypt", PublicKeyCipher::PrivateDecrypt);
-
-  JS_NAME_SET(target, JS_STRING_ID("SSL3_ENABLE"), STD_TO_BOOLEAN(SSL3_ENABLE));
 }
 
 }  // namespace crypto

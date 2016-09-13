@@ -165,7 +165,6 @@ void JXEngine::PrintHelp() {
       "  --v8-options         print v8 command line options\n"
       "  --max-stack-size=val set max v8 stack size (bytes)\n"
 #endif
-      "  --enable-ssl3        enable ssl3\n"
       "\n"
       "Environment variables:\n"
 #ifdef _WIN32
@@ -236,8 +235,9 @@ void JXEngine::ParseArgs(int argc, char **argv) {
                 "Error: --enable-ssl2 is no longer supported (CVE-2016-0800).\n");
         exit(12);
       } else if (strcmp(arg, "--enable-ssl3") == 0) {
-        node::SSL3_ENABLE = true;
-        argv[i] = const_cast<char *>("");
+        fprintf(stderr,
+                "Error: --enable-ssl3 is no longer supported (RFC 7568).\n");
+        exit(12);
       } else if (strcmp(arg, "--eval") == 0 || strcmp(arg, "-e") == 0 ||
                  strcmp(arg, "--print") == 0 || strcmp(arg, "-pe") == 0 ||
                  strcmp(arg, "-p") == 0) {

@@ -1111,6 +1111,8 @@
       'PURIFY',
       '_REENTRANT',
       'OPENSSL_NO_SSL2',
+      'OPENSSL_NO_SSL3',
+      'OPENSSL_NO_TLS1',
       # Heartbeat is a TLS extension, that couldn't be turned off or
       # asked to be not advertised. Unfortunately this is unacceptable for
       # Microsoft's IIS, which seems to be ignoring whole ClientHello after
@@ -1120,6 +1122,8 @@
     'direct_dependent_settings': {
       'defines': [
       'OPENSSL_NO_SSL2',
+      'OPENSSL_NO_SSL3',
+      'OPENSSL_NO_TLS1',
       'OPENSSL_NO_HEARTBEATS',
       ],
     },

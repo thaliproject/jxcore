@@ -129,13 +129,21 @@ static const SSL_METHOD *ssl23_get_client_method(int ver)
     if (ver == SSL3_VERSION)
         return (SSLv3_client_method());
 #endif
+#ifndef OPENSSL_NO_TLS1
     if (ver == TLS1_VERSION)
         return (TLSv1_client_method());
-    else if (ver == TLS1_1_VERSION)
+    else
+#endif
+#ifndef OPENSSL_NO_TLS1_1
+    if (ver == TLS1_1_VERSION)
         return (TLSv1_1_client_method());
-    else if (ver == TLS1_2_VERSION)
+    else
+#endif
+#ifndef OPENSSL_NO_TLS1_2
+    if (ver == TLS1_2_VERSION)
         return (TLSv1_2_client_method());
     else
+#endif
         return (NULL);
 }
 
@@ -323,7 +331,10 @@ static int ssl23_client_hello(SSL *s)
      * TLS1>=1, it would be insufficient to pass SSL_NO_TLSv1, the
      * answer is SSL_OP_NO_TLSv1|SSL_OP_NO_SSLv3|SSL_OP_NO_SSLv2.
      */
-    mask = SSL_OP_NO_TLSv1_1 | SSL_OP_NO_TLSv1
+    mask = SSL_OP_NO_TLSv1_1 
+#if !defined(OPENSSL_NO_TLSv1)
+      | SSL_OP_NO_TLSv1
+#endif
 #if !defined(OPENSSL_NO_SSL3)
         | SSL_OP_NO_SSLv3
 #endif
@@ -711,18 +722,27 @@ static int ssl23_get_server_hello(SSL *s)
             s->method = SSLv3_client_method();
         } else
 #endif
+#ifndef OPENSSL_NO_TLS1
         if ((p[2] == TLS1_VERSION_MINOR) && !(s->options & SSL_OP_NO_TLSv1)) {
             s->version = TLS1_VERSION;
             s->method = TLSv1_client_method();
-        } else if ((p[2] == TLS1_1_VERSION_MINOR) &&
+        } else 
+#endif
+#ifndef OPENSSL_NO_TLS_1_1
+          if ((p[2] == TLS1_1_VERSION_MINOR) &&
                    !(s->options & SSL_OP_NO_TLSv1_1)) {
             s->version = TLS1_1_VERSION;
             s->method = TLSv1_1_client_method();
-        } else if ((p[2] == TLS1_2_VERSION_MINOR) &&
+          } else 
+#endif
+#ifndef OPENSSL_NO_TLS_1_2
+            if ((p[2] == TLS1_2_VERSION_MINOR) &&
                    !(s->options & SSL_OP_NO_TLSv1_2)) {
             s->version = TLS1_2_VERSION;
             s->method = TLSv1_2_client_method();
-        } else {
+        } else 
+#endif
+        {
             SSLerr(SSL_F_SSL23_GET_SERVER_HELLO, SSL_R_UNSUPPORTED_PROTOCOL);
             goto err;
         }
