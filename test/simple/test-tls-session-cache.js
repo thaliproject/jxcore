@@ -6,7 +6,7 @@ if (!process.versions.openssl) {
 }
 
 require('child_process').exec('openssl version', function(err) {
-  if (err !== null) {
+  if (err) {
     console.error('Skipping: openssl command is not available.');
     process.exit(0);
   }
@@ -79,10 +79,10 @@ function doTest() {
       err += chunk;
     });
     client.on('exit', function(code) {
-      if (/^unknown option/.test(err)) {
-        // using an incompatible version of openssl
-        assert(code);
+      if (/^unknown option/.test(err) || /handshake failure/.test(err)) {
+        // using an incompatible or too old version of openssl
         badOpenSSL = true;
+        console.error(err);
       } else
         assert.equal(code, 0);
       server.close();
@@ -90,7 +90,9 @@ function doTest() {
   });
 
   process.on('exit', function() {
-    if (!badOpenSSL) {
+    if (badOpenSSL) {
+      console.error('Skipping: incompatible or too old version of OpenSSL');
+    } else {
       assert.ok(session);
 
       // initial request + reconnect requests (5 times)

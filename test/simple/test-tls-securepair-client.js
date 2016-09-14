@@ -9,40 +9,31 @@ var crypto = require('crypto');
 var tls = require('tls');
 var exec = require('child_process').exec;
 var spawn = require('child_process').spawn;
+var openssl_ok = true;
 
-exec('openssl version', callback());
-function callback(err, data) {
-  if (err !== null) {
+exec('openssl version', function(err, stdout, stderr) {
+  if (err) {
+    openssl_ok = false;
     console.error('Skipping: openssl command is not available.');
     process.exit(0);
   }
-}
+  if (/OpenSSL 0\./.test(stdout)) {
+    // There is a bug with 'openssl s_server' which makes it not flush certain
+    // important events to stdout when done over a pipe. Therefore we skip this
+    // test for all openssl versions less than 1.0.0.
+    openssl_ok = false;
+    console.error('Skipping: version < 1.0.0.');
+    process.exit(0);
+  }
+});
 
 if (!process.versions.openssl) {
+  openssl_ok = false;
   console.error('Skipping: node compiled without OpenSSL.');
   process.exit(0);
 }
 
-maybe(test1);
-
-// There is a bug with 'openssl s_server' which makes it not flush certain
-// important events to stdout when done over a pipe. Therefore we skip this
-// test for all openssl versions less than 1.0.0.
-function maybe(cb) {
-  exec('openssl version', function(err, data) {
-    if (err) throw err;
-    if (/OpenSSL 0\./.test(data)) {
-      console.error('Skipping due to old OpenSSL version.');
-      return;
-    }
-    cb();
-  });
-}
-
-// simple/test-tls-securepair-client
-function test1() {
-  test('agent.key', 'agent.crt', null, test2);
-}
+test('agent.key', 'agent.crt', null, test2);
 
 // simple/test-tls-ext-key-usage
 function test2() {
@@ -183,8 +174,10 @@ function test(keyfn, certfn, check, next) {
 
 
   process.on('exit', function() {
-    assert.equal(0, serverExitCode);
-    assert.equal('WAIT-SERVER-CLOSE', state);
-    assert.ok(gotWriteCallback);
+    if (openssl_ok) {
+      assert.equal(0, serverExitCode);
+      assert.equal('WAIT-SERVER-CLOSE', state);
+      assert.ok(gotWriteCallback);
+    }
   });
 }

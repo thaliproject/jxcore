@@ -1,20 +1,5 @@
 // Copyright & License details are available under JXCORE_LICENSE file
 
-if (process.env.CITEST) {
-    console.error('Skipping: due to CITEST environment variable. (old openssl.exe)');
-    process.exit(0);
-}
-
-if (!process.versions.openssl) {
-    console.error("Skipping: node compiled without OpenSSL.");
-    process.exit(0);
-}
-
-if (parseInt(process.versions.openssl[0]) < 1) {
-    console.error("Skipping: node compiled with old OpenSSL version.");
-    process.exit(0);
-}
-
 var common = require('../common');
 var join = require('path').join;
 var net = require('net');
@@ -24,37 +9,33 @@ var crypto = require('crypto');
 var tls = require('tls');
 var spawn = require('child_process').spawn;
 var exec = require('child_process').exec;
+var openssl_ok = true;
 
-exec('openssl version', callback());
-function callback(err, data) {
-  if (err !== null) {
+if (!process.versions.openssl) {
+    openssl_ok = false;
+    console.error("Skipping: node compiled without OpenSSL.");
+    process.exit(0);
+}
+
+if (parseInt(process.versions.openssl[0]) < 1) {
+    openssl_ok = false;
+    console.error("Skipping: node compiled with old OpenSSL version.");
+    process.exit(0);
+}
+
+exec('openssl version', function(err, stdout, stderr) {
+  if (err) {
+    openssl_ok = false;
     console.error('Skipping: openssl command is not available.');
     process.exit(0);
   }
-}
-
-// versions of openssl do not support PSK
-// Therefore we skip this
-// test for all openssl versions less than 1.0.0.
-function checkOpenSSL() {
-  exec('openssl version', function(err, data) {;
-    if (err) throw err;
-    if (/OpenSSL 0\./.test(data)) {
-      console.error('Skipping due to old OpenSSL version.');
-      return false;
-    }
-    else {
-      return true;
-    }
-  });
-}
-
-if (!checkOpenSSL()){
-  console.error("Skipping: OpenSSL version < 1.0.0.");
-  process.exit(0)
-}
-
-
+  if (/OpenSSL 0\./.test(stdout)) {
+    // openssl versions less than 1.0.0 do not support PSK
+    openssl_ok = false;
+    console.error('Skipping: version < 1.0.0.');
+    process.exit(0);
+  }
+});
 
 // FIXME: Avoid the common PORT as this test currently hits a C-level
 // assertion error with node_g. The program aborts without HUPing
@@ -87,6 +68,16 @@ if (!useTestServer) {
     //server.stdin.pipe(process.stdin);
 
     if (server.stdin) console.log('exists');
+
+    server.on('exit', function(err, stdout, stderr) {
+      if (/no ciphers available/.test(err) || /handshake failure/.test(err)) {
+        // using an incompatible or too old version of openssl
+        openssl_ok = false;
+        console.error('Skipping: incompatible or too old version of OpenSSL');
+        console.error(err);
+        process.exit(0);
+      }
+    });
 
     var state = 'WAIT-ACCEPT';
 
@@ -176,7 +167,7 @@ function startClient() {
         console.log('client connected');
     });
 
-    pair.once   ('secure', function () {
+    pair.once('secure', function () {
         console.log('client: connected+secure!');
         console.log('client pair.cleartext.getCipher(): %j',
             pair.cleartext.getCipher());
@@ -216,8 +207,10 @@ if (useTestServer){
 }
 
 process.on('exit', function () {
+  if (openssl_ok) {
     assert.equal(0, serverExitCode);
     assert.equal('WAIT-SERVER-CLOSE', state);
     assert.ok(gotWriteCallback);
+  }
 });
 

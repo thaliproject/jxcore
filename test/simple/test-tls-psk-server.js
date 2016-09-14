@@ -21,27 +21,21 @@ var crypto = require('crypto');
 var tls = require('tls');
 var spawn = require('child_process').spawn;
 var exec = require('child_process').exec;
+var openssl_ok = true;
 
-// versions of openssl do not support PSK
-// Therefore we skip this
-// test for all openssl versions less than 1.0.0.
-function checkOpenSSL() {
-  exec('openssl version', function(err, data) {;
-    if (err) throw err;
-    if (/OpenSSL 0\./.test(data)) {
-      console.error('Skipping due to old OpenSSL version.');
-      return false;
-    }
-    else {
-      return true;
-    }
-  });
-}
-
-if (!checkOpenSSL()){
-  console.error("Skipping: OpenSSL version < 1.0.0.");
-  process.exit(0)
-}
+exec('openssl version', function(err, stdout, stderr) {
+  if (err) {
+    openssl_ok = false;
+    console.error('Skipping: openssl command is not available.');
+    process.exit(0);
+  }
+  if (/OpenSSL 0\./.test(stdout)) {
+    // openssl versions less than 1.0.0 do not support PSK
+    openssl_ok = false;
+    console.error('Skipping: version < 1.0.0.');
+    process.exit(0);
+  }
+});
 
 
 var connections = 0;
@@ -170,9 +164,11 @@ server.listen(common.PORT, function() {
 });
 
 process.on('exit', function() {
-  assert.equal(1, connections);
-  assert.ok(gotHello);
-  assert.ok(sentWorld);
-  assert.ok(gotWorld);
-  assert.equal(0, opensslExitCode);
+  if (openssl_ok) {
+    assert.equal(1, connections);
+    assert.ok(gotHello);
+    assert.ok(sentWorld);
+    assert.ok(gotWorld);
+    assert.equal(0, opensslExitCode);
+  }
 });
