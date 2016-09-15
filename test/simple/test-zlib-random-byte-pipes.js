@@ -47,7 +47,6 @@ RandomReadStream.prototype.pause = function() {
 };
 
 RandomReadStream.prototype.resume = function() {
-  // console.error("rrs resume");
   this._paused = false;
   this.emit('resume');
   this._process();

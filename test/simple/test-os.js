@@ -1,9 +1,5 @@
 // Copyright & License details are available under JXCORE_LICENSE file
 
-
-
-
-
 var common = require('../common');
 var assert = require('assert');
 var os = require('os');
@@ -19,7 +15,13 @@ assert.equal(os.tmpdir(), '/tmp');
 process.env.TMP = '';
 assert.equal(os.tmpdir(), '/temp');
 process.env.TEMP = '';
-assert.equal(os.tmpdir(), t);
+
+if (process.platform === "android") {
+  // Skip this step on Android since the expected result is the
+  // relative path to the dir where jxcore is executed. 
+} else {
+  assert.equal(os.tmpdir(), t);
+}
 
 var endianness = os.endianness();
 console.log('endianness = %s', endianness);

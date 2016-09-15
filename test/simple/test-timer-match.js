@@ -10,6 +10,8 @@ var test = function() {
   var time = Date.now();
 
   if (time == last_time) {
+    console.error('Last time: ', last_time);
+    console.error('Curr time: ', time);
     throw new Error("Fail!");
   }
 

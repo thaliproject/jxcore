@@ -1,9 +1,5 @@
 // Copyright & License details are available under JXCORE_LICENSE file
 
-
-
-
-
 var common = require('../common');
 var assert = require('assert');
 var http = require('http');
@@ -22,7 +18,6 @@ server.listen(common.PORT, function() {
     setTimeout(function() {
       for (var j = 0; j < M; j++) {
         http.get({ port: common.PORT, path: '/' }, function(res) {
-          console.log('%d %d', responses, res.statusCode);
           if (++responses == N * M) {
             console.error('Received all responses, closing server');
             server.close();

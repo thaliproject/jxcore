@@ -5,6 +5,13 @@ if (process.platform === 'win32') {
   process.exit(0);
 }
 
+// Skipping on Android because the command 'sed s/o/a/'
+// has a different behavior that makes this test incompatible
+if (process.platform === 'android') {
+  console.error('Skipping: platform is Android.');
+  process.exit(0);
+}
+
 var is_windows = process.platform === 'win32';
 
 var common = require('../common');

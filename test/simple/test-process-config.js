@@ -1,5 +1,9 @@
 // Copyright & License details are available under JXCORE_LICENSE file
 
+if (process.platform === "android" || process.platform === "ios") {
+    console.error('Skipping: mobile platform.');
+    process.exit(0);
+}
 
 var common = require('../common');
 var assert = require('assert');

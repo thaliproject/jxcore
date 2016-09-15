@@ -7,9 +7,12 @@ var exec = require('child_process').exec;
 var tls = require('tls');
 var fs = require('fs');
 
-if (process.platform === 'win32') {
-  console.log("Skipping test, you probably don't have openssl installed.");
-  process.exit();
+exec('openssl version', callback());
+function callback(err, data) {
+  if (err !== null) {
+    console.error('Skipping: openssl command is not available.');
+    process.exit(0);
+  }
 }
 
 var options = {

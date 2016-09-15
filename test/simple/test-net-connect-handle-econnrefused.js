@@ -19,7 +19,7 @@ c.on('connect', function() {
 
 var gotError = false;
 c.on('error', function(e) {
-  console.error('couldn\'t connect.');
+  console.error('Expected error: couldn\'t connect.');
   gotError = true;
   assert.equal('ECONNREFUSED', e.code);
 });

@@ -23,7 +23,7 @@ function after(err, stdout, stderr) {
 
 if (process.platform !== 'win32') {
   var isAndroid = process.platform === 'android';
-  child = exec(isAndroid ? '/system/xbin/env' : '/usr/bin/env', { env: { 'HELLO': 'WORLD' } }, after);
+  child = exec(isAndroid ? '/system/bin/env' : '/usr/bin/env', { env: { 'HELLO': 'WORLD' } }, after);
 } else {
   child = exec('set', { env: { 'HELLO': 'WORLD' } }, after);
 }

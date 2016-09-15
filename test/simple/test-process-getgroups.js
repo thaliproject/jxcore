@@ -9,6 +9,13 @@ if (process.platform === 'darwin') {
   process.exit(0);
 }
 
+// On Android 'id -G'  returns '1004 1007 1011 1015 1028 3001 3002 3003 3006'
+// process.getgroups() returns '1004 1007 1011 1015 1028 3001 3002 3003 3006 0'
+if (process.platform === 'android') {
+  console.log('Skipping: platform is Android.');
+  process.exit(0);
+}
+
 if (typeof process.getgroups === 'function') {
   var groups = process.getgroups();
   assert(Array.isArray(groups));
