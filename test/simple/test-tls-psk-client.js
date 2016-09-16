@@ -25,6 +25,14 @@ var tls = require('tls');
 var spawn = require('child_process').spawn;
 var exec = require('child_process').exec;
 
+exec('openssl version', callback());
+function callback(err, data) {
+  if (err !== null) {
+    console.error('Skipping: openssl command is not available.');
+    process.exit(0);
+  }
+}
+
 // versions of openssl do not support PSK
 // Therefore we skip this
 // test for all openssl versions less than 1.0.0.

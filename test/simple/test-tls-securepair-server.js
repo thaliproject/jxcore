@@ -1,16 +1,5 @@
 // Copyright & License details are available under JXCORE_LICENSE file
 
-// this test file is not compatible to Windows
-if (process.platform === 'win32') {
-  console.error('Skipping: platform is Windows.');
-  process.exit(0);
-}
-
-if (!process.versions.openssl) {
-  console.error('Skipping: node compiled without OpenSSL.');
-  process.exit(0);
-}
-
 var common = require('../common');
 var assert = require('assert');
 
@@ -20,6 +9,20 @@ var fs = require('fs');
 var crypto = require('crypto');
 var tls = require('tls');
 var spawn = require('child_process').spawn;
+var exec = require('child_process').exec;
+
+exec('openssl version', callback());
+function callback(err, data) {
+  if (err !== null) {
+    console.error('Skipping: openssl command is not available.');
+    process.exit(0);
+  }
+}
+
+if (!process.versions.openssl) {
+  console.error('Skipping: node compiled without OpenSSL.');
+  process.exit(0);
+}
 
 var connections = 0;
 var key = fs.readFileSync(join(common.fixturesDir, 'agent.key')).toString();

@@ -48,7 +48,7 @@ function rejectUnauthorized() {
     assert(false);
   });
   socket.on('error', function(err) {
-    common.debug(err);
+    common.debug('Expected error: ' + err);
     authorized();
   });
   socket.write('ng');

@@ -29,10 +29,7 @@ var server = http.createServer(function(req, res) {
 
   var data;
   dom.run(function() {
-    // Now, an action that has the potential to fail!
-    // if you request 'baz', then it'll throw a JSON circular ref error.
     console.log("url", req.url);
-    //data = JSON.stringify(objects[req.url.replace(/[^a-z]/g, '')]);
     data = req.url;
     // this line will throw if you pick an unknown key
     assert(data !== undefined, 'Data should not be undefined');
@@ -85,9 +82,7 @@ function next() {
         d += c;
       });
       res.on('end', function() {
-        console.error('trying to parse json', d);
-        //d = JSON.parse(d);
-        console.log('json!', d);
+        console.log('data received: ', d);
       });
     });
   }

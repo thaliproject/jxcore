@@ -19,7 +19,7 @@ env.__proto__ = {
 if (isWindows) {
   var child = spawn('cmd.exe', ['/c', 'set'], {env: env});
 } else {
-  var child = spawn(isAndroid ? '/system/xbin/env' : '/usr/bin/env', [], {env: env});
+  var child = spawn(isAndroid ? '/system/bin/env' : '/usr/bin/env', [], {env: env});
 }
 
 

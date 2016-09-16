@@ -15,8 +15,10 @@ var fs = require('fs');
 
 var dataExpected = fs.readFileSync(__filename, 'utf8');
 
+var stdin = (process.platform === "android") ? '/proc/self/fd/0' : '/dev/stdin';
+
 if (process.argv[2] === 'child') {
-  fs.readFile('/dev/stdin', function(er, data) {
+  fs.readFile(stdin, function(er, data) {
     if (er) throw er;
     process.stdout.write(data);
   });

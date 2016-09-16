@@ -36,7 +36,6 @@ server.listen(common.PORT, function() {
           rejectUnauthorized: false
         }, function(res) {
           res.resume();
-          console.log(res.statusCode);
           if (++responses == N * M) server.close();
         }).on('error', function(e) {
           console.log(e.message);

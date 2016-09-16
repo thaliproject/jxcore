@@ -1,9 +1,5 @@
 // Copyright & License details are available under JXCORE_LICENSE file
 
-
-
-
-
 // We are demonstrating a problem with http.get when queueing up many
 // transfers. The server simply introduces some delay and sends a file.
 // Note this is demonstrated with connection: close.
@@ -46,14 +42,12 @@ server.listen(common.PORT, function() {
       };
 
       http.get(opts, function(res) {
-        console.error('recv ' + x);
         var s = fs.createWriteStream(common.tmpDir + '/' + x + '.jpg');
         res.pipe(s);
 
         // TODO there should be a callback to pipe() that will allow
         // us to get a callback when the pipe is finished.
         res.on('end', function() {
-          console.error('done ' + x);
           if (++responses == total) {
             s.on('close', checkFiles);
           }

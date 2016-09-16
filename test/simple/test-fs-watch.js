@@ -1,14 +1,20 @@
 // Copyright & License details are available under JXCORE_LICENSE file
 
-
 var common = require('../common');
 var assert = require('assert');
 var path = require('path');
 var fs = require('fs');
 
 var expectFilePath = process.platform === 'win32' ||
-                     process.platform === 'linux' ||
-                     process.platform === 'darwin';
+                     process.platform === 'android' ||
+                     process.platform === 'linux' ;
+
+// Darwin only shows the file path for subdir watching,
+// not for individual file watching.
+var expectFilePathSubDir = process.platform === 'win32' ||
+                           process.platform === 'linux' ||
+                           process.platform === 'android' ||
+                           process.platform === 'darwin';
 
 var watchSeenOne = 0;
 var watchSeenTwo = 0;
@@ -48,9 +54,7 @@ assert.doesNotThrow(
       watcher.on('change', function(event, filename) {
         assert.equal('change', event);
 
-        // darwin only shows the file path for subdir watching,
-        // not for individual file watching.
-        if (expectFilePath && process.platform !== 'darwin') {
+        if (expectFilePath) {
           assert.equal('watch.txt', filename);
         } else {
           assert.equal(null, filename);
@@ -75,9 +79,7 @@ assert.doesNotThrow(
       var watcher = fs.watch(filepathTwo, function(event, filename) {
         assert.equal('change', event);
 
-        // darwin only shows the file path for subdir watching,
-        // not for individual file watching.
-        if (expectFilePath && process.platform !== 'darwin') {
+        if (expectFilePath) {
           assert.equal('hasOwnProperty', filename);
         } else {
           assert.equal(null, filename);
@@ -100,7 +102,7 @@ assert.doesNotThrow(
       var watcher = fs.watch(testsubdir, function(event, filename) {
         var renameEv = process.platform === 'sunos' ? 'change' : 'rename';
         assert.equal(renameEv, event);
-        if (expectFilePath) {
+        if (expectFilePathSubDir) {
           assert.equal('newfile.txt', filename);
         } else {
           assert.equal(null, filename);
