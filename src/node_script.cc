@@ -659,7 +659,6 @@ JS_NATIVE_RETURN_TYPE WrappedScript::EvalMachine(
         com->temp_exception_.Clear();
       }
 
-      JS_FORCE_GC();
     } else {
       if (script.IsEmpty())
         script = MozJS::Script(jxcore::GetScript(context, mscript), context);

@@ -29,7 +29,7 @@ JS_METHOD(ThreadWrap, CpuCount) {
 }
 JS_METHOD_END
 
-JS_METHOD(ThreadWrap, Free) { JS_FORCE_GC(); }
+JS_METHOD(ThreadWrap, Free) { }
 JS_METHOD_END
 
 #define CHECK_EMBEDDED_THREADS()                                            \
