@@ -1,5 +1,13 @@
 JXcore (http://jxcore.io)
 
+----JXcore 3.1.5
+- Remove explicit GC calls in jxcore.
+- test: new test script and test fixes.
+- Add SIGSEGV handler on Linux and Android.
+- Fix failing tests when run using test.js.
+- Update test script to report skipped tests.
+- Log skipped tests and standardize skipped tests message.
+
 ----JXcore 3.1.4
 - deps: Upgrade OpenSSL to 1.0.1t.
 - Externalize the paths. 
