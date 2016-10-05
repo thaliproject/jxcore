@@ -65,6 +65,12 @@ See [Roadmap](doc/ROADMAP.md) document.
 
 See [How to Compile](doc/HOW_TO_COMPILE.md) document.
 
+### Known issues:
+
+ - Array.prototype: adding a new method to the system Array type [causes unpredictable errors in jxcore](https://github.com/thaliproject/jxcore/issues/60).
+
+ - Explicit 'gc()' calls worsen a [known bug](https://github.com/thaliproject/jxcore/issues/59) that causes the SpiderMonkey GC to crash.
+
 ### To install:
 
 If you don't want to build JXcore by yourself, you can use pre-compiled binaries. 
