@@ -139,8 +139,9 @@ if (!useTestServer) {
 function startClient() {
     var s = new net.Stream();
 
-    var sslcontext = crypto.createCredentials({});
-    sslcontext.context.setCiphers(PSKCiphers);
+    var sslcontext = crypto.createCredentials({
+      ciphers: PSKCiphers
+    });
 
     function clientCallback(hint) {
         assert.equal(sharedHint, hint);
