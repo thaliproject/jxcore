@@ -6,9 +6,10 @@ var assert = require('assert');
 var tls = require('tls');
 var fs = require('fs');
 var nconns = 0;
-// test only in TLSv1 to use DES which is no longer supported TLSv1.2
-// to be safe when the default method is updated in the future
-var SSL_Method = 'TLSv1_method';
+
+// After disabling SSLv3 and TLSv1, the general purpose method SSLv23
+// will choose the correct protocol.
+var SSL_Method = 'SSLv23_method';
 var localhost = '127.0.0.1';
 
 process.on('exit', function() {
