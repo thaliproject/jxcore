@@ -6,13 +6,12 @@ var http = require('http');
 var childProcess = require('child_process');
 var exec = require('child_process').exec;
 
-exec('curl', callback());
-function callback(err, data) {
-  if (err !== null) {
+exec('curl --version', function(err, stdout, stderr) {
+  if (err) {
     console.error("Skipping: 'curl' command is not available.");
     process.exit(0);
   }
-}
+});
 
 var s = http.createServer(function(request, response) {
   response.writeHead(304);

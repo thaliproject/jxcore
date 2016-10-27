@@ -2,6 +2,7 @@
 
 var path = require('path');
 var assert = require('assert');
+var fs=require('fs');
 
 exports.testDir = path.dirname(__filename);
 exports.fixturesDir = path.join(exports.testDir, 'fixtures');
@@ -12,6 +13,9 @@ exports.PORT = +process.env.NODE_COMMON_PORT || 12347;
 if (process.platform === 'win32') {
   exports.PIPE = '\\\\.\\pipe\\libuv-test';
 } else {
+  if(!fs.existsSync(exports.tmpDir)) {
+    fs.mkdir(exports.tmpDir);
+  }
   exports.PIPE = exports.tmpDir + '/test.sock';
 }
 

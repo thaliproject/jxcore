@@ -2,7 +2,6 @@
 
 var common = require('../common');
 var assert = require('assert');
-
 var join = require('path').join;
 var net = require('net');
 var fs = require('fs');
@@ -10,16 +9,18 @@ var crypto = require('crypto');
 var tls = require('tls');
 var spawn = require('child_process').spawn;
 var exec = require('child_process').exec;
+var openssl_ok = true;
 
-exec('openssl version', callback());
-function callback(err, data) {
-  if (err !== null) {
+exec('openssl version', function(err, stdout, stderr) {
+  if (err) {
+    openssl_ok = false;
     console.error('Skipping: openssl command is not available.');
     process.exit(0);
   }
-}
+});
 
 if (!process.versions.openssl) {
+  openssl_ok = false;
   console.error('Skipping: node compiled without OpenSSL.');
   process.exit(0);
 }
@@ -107,9 +108,7 @@ server.listen(common.PORT, function() {
   var client = spawn('openssl', ['s_client', '-connect', '127.0.0.1:' +
         common.PORT]);
 
-
   var out = '';
-
   client.stdout.setEncoding('utf8');
   client.stdout.on('data', function(d) {
     out += d;
@@ -128,16 +127,31 @@ server.listen(common.PORT, function() {
 
   client.stdout.pipe(process.stdout, { end: false });
 
+  var err = '';
+  client.stderr.setEncoding('utf8');
+  client.stderr.on('data', function(chunk) {
+    err += chunk;
+  });
   client.on('exit', function(code) {
+    if (/^unknown option/.test(err) || /handshake failure/.test(err)) {
+      // using an incompatible or too old version of openssl
+      openssl_ok = false;
+      console.error(err);
+      console.error('Skipping: incompatible or too old version of OpenSSL');
+    } else {
+      assert.equal(code, 0);
+    }
     opensslExitCode = code;
     server.close();
   });
 });
 
 process.on('exit', function() {
-  assert.equal(1, connections);
-  assert.ok(gotHello);
-  assert.ok(sentWorld);
-  assert.ok(gotWorld);
-  assert.equal(0, opensslExitCode);
+  if (openssl_ok) {
+    assert.equal(1, connections);
+    assert.ok(gotHello);
+    assert.ok(sentWorld);
+    assert.ok(gotWorld);
+    assert.equal(0, opensslExitCode);
+  }
 });

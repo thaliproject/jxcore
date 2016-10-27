@@ -25,8 +25,6 @@
 
 namespace node {
 
-extern bool SSL3_ENABLE;
-
 namespace crypto {
 
 static X509_STORE* root_cert_store;

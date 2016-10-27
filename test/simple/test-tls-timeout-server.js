@@ -1,7 +1,9 @@
 // Copyright & License details are available under JXCORE_LICENSE file
 
-
-if (!process.versions.openssl) process.exit();
+if (!process.versions.openssl) {
+  console.error('Skipping: node compiled without OpenSSL.');
+  process.exit(0);
+}
 
 var common = require('../common');
 var assert = require('assert');
