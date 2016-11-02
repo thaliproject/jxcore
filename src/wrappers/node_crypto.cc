@@ -238,17 +238,17 @@ JS_METHOD(SecureContext, Init) {
     }
   }
 
-  sc->ctx_ = SSL_CTX_new(method);
-    
+sc->ctx_ = SSL_CTX_new(method);
+
   long options = SSL_CTX_get_options(sc->ctx_);
-  if (options & SSL_OP_NO_SSLv2)
+  if (!(options & SSL_OP_NO_SSLv2))
     options |= SSL_OP_NO_SSLv2;
-  if (options & SSL_OP_NO_SSLv3)
+  if (!(options & SSL_OP_NO_SSLv3))
     options |= SSL_OP_NO_SSLv3;
-  if (options & SSL_OP_NO_TLSv1)
+  if (!(options & SSL_OP_NO_TLSv1))
     options |= SSL_OP_NO_TLSv1;
 
-  SSL_CTX_set_options(sc->ctx_,options);
+SSL_CTX_set_options(sc->ctx_,options);
 
   // SSL session cache configuration
   SSL_CTX_set_session_cache_mode(sc->ctx_, SSL_SESS_CACHE_SERVER |
