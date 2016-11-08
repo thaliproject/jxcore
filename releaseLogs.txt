@@ -1,5 +1,13 @@
 JXcore (http://jxcore.io)
 
+----JXcore 3.1.6
+- Remove SIGSEGV signal handler.
+- node_crypto: SecureContext::Init option check bug.
+- crypto.js: secureOptions type validation.
+- ci: update Travis to use Ubuntu 14.04.
+- deps: move changed files.
+- Fix: JXcore fails connecting to an OpenSSl Server.
+
 ----JXcore 3.1.5
 - Remove explicit GC calls in jxcore.
 - test: new test script and test fixes.
