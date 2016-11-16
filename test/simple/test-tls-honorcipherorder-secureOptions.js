@@ -50,7 +50,7 @@ function test(honorCipherOrder, clientCipher, expectedCipher, secureOptions, cb)
 
     assert.strictEqual(server.secureOptions & expectedSecureOpts,
                        expectedSecureOpts, 'we should preserve secureOptions');
-    assert.strictEqual(server.secureOptions & ~expectedSecureOpts,
+    assert.strictEqual((server.secureOptions & secureOptions) & ~expectedSecureOpts,
                        0,
                        'we should not add extra options');
   }
