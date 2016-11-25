@@ -115,6 +115,7 @@
       'src/jx/memory_store.cc',
       'src/jx/jxp_compress.cc',
       'src/jx/error_definition.cc',
+      'src/jx/jx_thread.cc',
 
       'src/wrappers/handle_wrap.cc',
       'src/wrappers/thread_wrap.cc',

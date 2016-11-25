@@ -1024,6 +1024,8 @@ JS_LOCAL_METHOD(Exit) {
   ENGINE_PRINT_LOGS();
   exit(args.GetInt32(0));
 #else
+  node::commons::processExitResult = args.GetInt32(0);
+  node::commons::processExitInvoked = true;
   com->expects_reset = com->threadId > 0;
   JS_TERMINATE_EXECUTION(com->threadId);
   uv_stop(com->loop);
