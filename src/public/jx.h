@@ -11,7 +11,23 @@ extern "C" {
 
 typedef void (*JX_CALLBACK)(JXValue *result, int argc);
 
-// Call method below only once per app. to initialize JXcore
+// Creates a thread to run a restartable instance of the JXcore engine
+// Input arg 'start' is the function to run on the new thread.
+JXCORE_EXTERN(bool)
+JX_CreateRIThread(void (*start)(void *arg));
+
+// Join the thread created by JX_CreateRIThread. Make sure to call
+// this method only after JX_StopEngine has been called on the
+// thread to join.
+JXCORE_EXTERN(bool)
+JX_JoinRIThread();
+
+// If the script has called 'process.exit(exitcode)', it returns
+// the exitcode, otherwise returns '0'.
+JXCORE_EXTERN(int)
+JX_ProcessExitResult();
+
+// Call method below only once per app. to initialize JXcore.
 JXCORE_EXTERN(void)
 JX_InitializeOnce(const char *home_folder);
 

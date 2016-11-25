@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "../jx/jx_private.h"
+#include "../jx/jx_thread.h"
 #include "jx.h"
 
 using namespace jxcore;
@@ -32,6 +33,9 @@ char *app_args[2];
     results[len].was_stored_ = false;                            \
   }
 
+// Thread dedicated to running restartable instances
+static bool hasRIThread = false;
+static JXThread riThread;
 static int extension_id = 0;
 #define MAX_CALLBACK_ID 1024
 static JX_CALLBACK callbacks[MAX_CALLBACK_ID] = {0};
@@ -92,6 +96,48 @@ JS_LOCAL_METHOD(extensionCallback) {
 }
 JS_METHOD_END
 
+#ifdef JS_ENGINE_MOZJS
+bool JX_CreateRIThread(void (*start)(void *arg)) {
+  if (hasRIThread) {
+    warn_console("(JX_CreateRIThread) Only one thread allowed at a time.");
+    return false;
+  }
+  riThread = jxcore::JXThread::Create(start, NULL);
+  hasRIThread = true;
+  return true;
+}
+
+bool JX_JoinRIThread() {
+  if (!hasRIThread) {
+    warn_console("(JX_JoinRIThread) There is no RI thread.");
+    return false;
+  }
+
+  bool result = jxcore::JXThread::Join(riThread);
+  if (result == true) {
+    hasRIThread = false;
+    node::commons::threadIdCounter--;
+    reduceThreadCount();
+  } else {
+    warn_console("(JX_JoinRIThread) jxcore::JXThread::Join failed.");
+  }
+  return result;
+}
+#else
+// Restartable instances are only implemented with SpiderMonkey
+bool JX_CreateRIThread(void (*start)(void *arg)) {
+  return false;
+}
+
+bool JX_JoinRIThread() {
+  return false;
+}
+#endif
+
+int JX_ProcessExitResult() {
+  return node::commons::processExitResult;
+}
+
 void JX_DefineExtension(const char *name, JX_CALLBACK callback) {
   auto_lock locker_(CSLOCK_RUNTIME);
   int id = extension_id++;
@@ -143,6 +189,7 @@ void JX_SetNativeMethod(JXValue *value, const char *name,
 }
 
 void JX_InitializeNewEngine() {
+  bool restartable = false;
   auto_lock locker_(CSLOCK_RUNTIME);
   JXEngine *engine = JXEngine::ActiveInstance();
   const int threadId = node::commons::threadIdFromThreadPrivate();
@@ -154,6 +201,9 @@ void JX_InitializeNewEngine() {
     return;
   }
 
+#ifdef JS_ENGINE_MOZJS
+  restartable = (hasRIThread && riThread.Equals(jxcore::JXThread::GetCurrent()));
+#endif  
   engine = new jxcore::JXEngine(2, app_args, false);
   engine->Initialize();
 }
@@ -249,18 +299,24 @@ void JX_StartEngine() {
     return;
   }
 
+  node::commons::processExitResult = 0;
+  node::commons::processExitInvoked = false;
+
 #if defined(__IOS__) || defined(__ANDROID__) || defined(DEBUG)
   warn_console("Starting JXcore engine\n");
 #endif
 
   engine->Start();
-  engine->LoopOnce();
+
 #if defined(__IOS__) || defined(__ANDROID__) || defined(DEBUG)
   warn_console("JXcore engine is started\n");
 #endif
 }
 
 int JX_LoopOnce() {
+  if (node::commons::processExitInvoked == true) {
+    return 0;
+  }
   JXEngine *engine = JXEngine::ActiveInstance();
   if (engine == NULL) {
     warn_console(
@@ -273,6 +329,9 @@ int JX_LoopOnce() {
 }
 
 int JX_Loop() {
+  if (node::commons::processExitInvoked == true) {
+    return 0;
+  }
   JXEngine *engine = JXEngine::ActiveInstance();
   if (engine == NULL) {
     warn_console(
@@ -343,7 +402,7 @@ void JX_StopEngine() {
   delete engine;
   engine = NULL;
 #if defined(__IOS__) || defined(__ANDROID__) || defined(DEBUG)
-  warn_console("JXcore engine is destroyed");
+  warn_console("JXcore engine is destroyed\n");
 #endif
 }
 
