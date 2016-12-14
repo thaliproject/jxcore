@@ -1,8 +1,14 @@
 JXcore (http://jxcore.io)
 
+----JXcore 3.1.8
+- improving resursion overflow warning.
+- Fix for SM bug 1057580.
+- Fix: release root after object has been deleted.
+
+
 ----JXcore 3.1.7
 - fix: round float value in setTimeout/setInterval to int.
-- tls destroy will destroy underlying socket with the same error
+- tls destroy will destroy underlying socket with the same error.
 
 ----JXcore 3.1.6
 - Remove SIGSEGV signal handler.
