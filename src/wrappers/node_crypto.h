@@ -270,6 +270,7 @@ class Connection : ObjectWrap {
     if (!sniContext_.IsEmpty()) JS_CLEAR_PERSISTENT(sniContext_);
     if (!servername_.IsEmpty()) JS_CLEAR_PERSISTENT(servername_);
 #endif
+    if (!psk_client_cb_.IsEmpty()) JS_CLEAR_PERSISTENT(psk_client_cb_);
   }
 
  private:
