@@ -14,6 +14,10 @@ if (!process.versions.openssl) {
   console.error('Skipping: node compiled without OpenSSL.');
   process.exit(0);
 }
+if(process.isEmbedded === true) {
+  console.error('Skipping: the test works only in standalone mode');
+  process.exit(0);
+}
 
 // http://groups.google.com/group/nodejs/browse_thread/thread/f66cd3c960406919
 var common = require('../common');

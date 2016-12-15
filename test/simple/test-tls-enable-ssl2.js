@@ -1,3 +1,8 @@
+if(process.isEmbedded === true) {
+  console.error('Skipping: the test works only in standalone mode');
+  process.exit(0);
+}
+
 'use strict';
 
 var common = require('../common');

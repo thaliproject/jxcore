@@ -4,6 +4,11 @@
 // This test starts two clustered HTTP servers on the same port. It expects the
 // first cluster to succeed and the second cluster to fail with EADDRINUSE.
 
+if(process.isEmbedded === true) {
+  console.error('Skipping: the test works only in standalone mode');
+  process.exit(0);
+}
+
 var common = require('../common');
 var assert = require('assert');
 var cluster = require('cluster');

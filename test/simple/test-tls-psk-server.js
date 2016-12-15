@@ -9,7 +9,10 @@ if (parseInt(process.versions.openssl[0]) < 1) {
   console.error("Skipping: node compiled with old OpenSSL version.");
   process.exit(0);
 }
-
+if(process.isEmbedded === true) {
+  console.error('Skipping: the test works only in standalone mode');
+  process.exit(0);
+}
 
 var common = require('../common');
 var assert = require('assert');

@@ -1,4 +1,8 @@
 // Copyright & License details are available under JXCORE_LICENSE file
+if(process.isEmbedded === true) {
+  console.error('Skipping: the test works only in standalone mode');
+  process.exit(0);
+}
 
 var common = require('../common');
 var join = require('path').join;
@@ -65,7 +69,6 @@ if (!useTestServer) {
         '-nocert']);
     server.stdout.pipe(process.stdout);
     server.stderr.pipe(process.stdout);
-    //server.stdin.pipe(process.stdin);
 
     if (server.stdin) console.log('exists');
 

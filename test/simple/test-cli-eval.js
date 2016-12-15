@@ -1,5 +1,8 @@
 // Copyright & License details are available under JXCORE_LICENSE file
-
+if(process.isEmbedded === true) {
+  console.error('Skipping: the test works only in standalone mode');
+  process.exit(0);
+}
 if (module.parent) {
   // signal we've been loaded as a module
   console.log('Loaded as a module, exiting with status code 42.');

@@ -1,5 +1,8 @@
 // Copyright & License details are available under JXCORE_LICENSE file
-
+if(process.isEmbedded === true) {
+  console.error('Skipping: the test works only in standalone mode');
+  process.exit(0);
+}
 // this test file is not compatible to Windows
 if (process.platform === 'win32') return;
 

@@ -4,6 +4,10 @@ if (!process.versions.openssl) {
   console.error('Skipping: node compiled without OpenSSL.');
   process.exit(0);
 }
+if(process.isEmbedded === true) {
+  console.error('Skipping: the test works only in standalone mode');
+  process.exit(0);
+}
 
 require('child_process').exec('openssl version', function(err) {
   if (err) {

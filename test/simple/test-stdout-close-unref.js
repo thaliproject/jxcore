@@ -6,6 +6,11 @@ if (process.platform === 'win32') {
   process.exit(0);
 }
 
+if(process.isEmbedded === true) {
+  console.error('Skipping: the test works only in standalone mode');
+  process.exit(0);
+}
+
 process.stdin.resume();
 process.stdin._handle.close();
 process.stdin._handle.unref();  // Should not segfault.
