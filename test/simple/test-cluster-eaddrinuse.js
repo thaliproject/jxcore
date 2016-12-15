@@ -5,6 +5,11 @@
 // leave the master process in a confused state. Releasing the port and
 // trying again should Just Work[TM].
 
+if(process.isEmbedded === true) {
+  console.error('Skipping: the test works only in standalone mode');
+  process.exit(0);
+}
+
 var common = require('../common');
 var assert = require('assert');
 var cluster = require('cluster');

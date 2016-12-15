@@ -1,5 +1,8 @@
 // Copyright & License details are available under JXCORE_LICENSE file
-
+if(process.isEmbedded === true) {
+  console.error('Skipping: the test works only in standalone mode');
+  process.exit(0);
+}
 
 // Test that a Linux specific quirk in the handle passing protocol is handled
 // correctly. See https://github.com/joyent/node/issues/5330 for details.

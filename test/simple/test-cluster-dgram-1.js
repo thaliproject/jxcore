@@ -4,7 +4,10 @@ if (process.platform === 'win32') {
   console.error('Skipping: dgram clustering is currently not supported on Windows.');
   process.exit(0);
 }
-
+if(process.isEmbedded === true) {
+  console.error('Skipping: the test works only in standalone mode');
+  process.exit(0);
+}
 var NUM_WORKERS = 4;
 var PACKETS_PER_WORKER = 10;
 

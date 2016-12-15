@@ -4,6 +4,11 @@
 // Testing mutual send of handles: from master to worker, and from worker to
 // master.
 
+if(process.isEmbedded === true) {
+  console.error('Skipping: the test works only in standalone mode');
+  process.exit(0);
+}
+
 var common = require('../common');
 var assert = require('assert');
 var cluster = require('cluster');
