@@ -434,7 +434,19 @@ js_ReportOverRecursed(JSContext *maybecx)
     static bool warned = false;
     if(!warned) {
       warned = true;
-      warn_console("!!! js_ReportOverRecursed called !!!\n");
+      if (maybecx) {
+          JSScript * script = maybecx->currentScript();
+          if (script) {
+              warn_console(
+                  "!!! js_ReportOverRecursed called, script filename: %s, line: %u, column: %u\n",
+                  script->filename(), script->lineno(), script->column()
+              );
+          } else {
+              warn_console("!!! js_ReportOverRecursed called without script\n");
+          }
+      } else {
+          warn_console("!!! js_ReportOverRecursed called in unknown context\n");
+      }
       // if you endup receiving this message, check if you lost the track
       // of the actual thread and JSContext match.
     }
