@@ -25,5 +25,6 @@ var timedout = false;
 });
 
 process.on('exit', function () {
+  server.close();
   assert.strictEqual(timedout, false, 'Socket timeout should not hold loop open');
 });
