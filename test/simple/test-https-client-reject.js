@@ -11,6 +11,8 @@ var https = require('https');
 var fs = require('fs');
 var path = require('path');
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '1';
+
 var options = {
   key: fs.readFileSync(path.join(common.fixturesDir, 'test_key.pem')),
   cert: fs.readFileSync(path.join(common.fixturesDir, 'test_cert.pem'))
