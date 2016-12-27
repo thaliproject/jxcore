@@ -563,20 +563,6 @@ such as in the generation of encryption keys.
 
 Usage is otherwise identical to `crypto.randomBytes`.
 
-## crypto.generateHKDF(bytes_to_generate, ikm, salt, digest_buffer)
-
-Implements the RFC 5869's HKDF function using the specified digest, input
-keying material (IKM) and salt. It will return the specified number of bytes
-of keying material.
-
-## crypto.pkcs12.createBundle(password, cert_name, country, organization)
-
-Creates a Elliptic Curve (EC) based private key, a self signed x509
-certificate and returns the PKCS12 bundle containing the same.
-
-## crypto.pkcs12.extractPublicKey(password, pkcs12_content)
-
-Parses the PKCS12 content and returns the extracted public key.
 
 ## crypto.publicEncrypt(public_key, buffer)
 
@@ -612,7 +598,6 @@ treated as the key with no passphrase and will use `RSA_PKCS1_OAEP_PADDING`.
   * `constants.RSA_PKCS1_OAEP_PADDING`
 
 NOTE: All paddings are defined in `constants` module.
-
 ## crypto.DEFAULT_ENCODING
 
 The default encoding to use for functions that can take either strings
