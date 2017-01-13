@@ -54,7 +54,7 @@ MAKE_INSTALL() {
   ./configure --prefix=$PREFIX_DIR --static-library --dest-os=android --dest-cpu=$1 --without-snapshot
   ERROR_ABORT_MOVE "mv out $TARGET_DIR" $1
   rm -rf $PREFIX_DIR/bin
-  make install
+  make V= -j $(getconf _NPROCESSORS_ONLN) install
   ERROR_ABORT_MOVE "mv out $TARGET_DIR" $1
   mv out $TARGET_DIR
   

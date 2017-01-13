@@ -62,7 +62,7 @@ MAKE_INSTALL() {
   
   ERROR_ABORT_MOVE "mv out $TARGET_DIR" $1
   
-  make
+  make V= -j $(getconf _NPROCESSORS_ONLN)
   ERROR_ABORT_MOVE "mv out $TARGET_DIR" $1
   
   mv out $TARGET_DIR

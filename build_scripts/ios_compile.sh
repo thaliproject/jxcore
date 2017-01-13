@@ -66,7 +66,7 @@ MAKE_INSTALL() {
   ./configure --prefix=$PREFIX_DIR --static-library --dest-os=ios --dest-cpu=$1 --engine-mozilla --compress-internals $CONF_EXTRAS
   ERROR_ABORT_MOVE "mv out $TARGET_DIR" $1
   rm -rf $PREFIX_DIR/bin
-  make -j 2 install
+  make V= -j $(getconf _NPROCESSORS_ONLN) install
   ERROR_ABORT_MOVE "mv out $TARGET_DIR" $1
   mv out $TARGET_DIR
 	

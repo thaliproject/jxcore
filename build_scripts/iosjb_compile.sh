@@ -45,7 +45,7 @@ MAKE_INSTALL() {
   ./configure --prefix=$PREFIX_DIR --dest-os=ios --dest-cpu=$1 --engine-mozilla
   ERROR_ABORT_MOVE "mv out $TARGET_DIR" $1
   rm -rf $PREFIX_DIR/bin
-  make install -j8
+  make V= install -j $(getconf _NPROCESSORS_ONLN)
   ERROR_ABORT_MOVE "mv out $TARGET_DIR" $1
   mv out $TARGET_DIR
 }
