@@ -2013,6 +2013,9 @@ void SetupProcessObject(const int threadId, bool debug_worker) {
 
   JS_NAME_SET(process, JS_STRING_ID("threadId"), STD_TO_INTEGER(threadId - 1));
 
+  JS_NAME_SET(process, JS_STRING_ID("isRestartableInstance"),
+              STD_TO_BOOLEAN(threadId == node::commons::riThreadId));
+
   // process.version
   JS_NAME_SET(process, JS_STRING_ID("version"), STD_TO_STRING(NODE_VERSION));
   JS_NAME_SET(process, JS_STRING_ID("jxversion"),

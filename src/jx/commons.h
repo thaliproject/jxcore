@@ -116,6 +116,7 @@ class commons {
   static bool ssl_initialized_;
   static bool self_hosted_process_;
   static bool embedded_multithreading_;
+  static int riThreadId;
 
   static char *embedded_source_;  // static data for entry point
   bool is_packaged_;              // marker check
