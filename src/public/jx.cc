@@ -189,7 +189,6 @@ void JX_SetNativeMethod(JXValue *value, const char *name,
 }
 
 void JX_InitializeNewEngine() {
-  bool restartable = false;
   auto_lock locker_(CSLOCK_RUNTIME);
   JXEngine *engine = JXEngine::ActiveInstance();
   const int threadId = node::commons::threadIdFromThreadPrivate();
@@ -201,10 +200,17 @@ void JX_InitializeNewEngine() {
     return;
   }
 
-#ifdef JS_ENGINE_MOZJS
-  restartable = (hasRIThread && riThread.Equals(jxcore::JXThread::GetCurrent()));
-#endif  
   engine = new jxcore::JXEngine(2, app_args, false);
+
+  if (hasRIThread && riThread.Equals(jxcore::JXThread::GetCurrent())) {
+    if (node::commons::riThreadId != -2) {
+      warn_console(
+          "(JX_InitializeNewEngine) Did you forget to destroy the existing "
+          "restartable instance thread?\n");
+    }
+    node::commons::riThreadId = engine->threadId_;
+  }
+
   engine->Initialize();
 }
 
@@ -404,6 +410,10 @@ void JX_StopEngine() {
 #if defined(__IOS__) || defined(__ANDROID__) || defined(DEBUG)
   warn_console("JXcore engine is destroyed\n");
 #endif
+
+  if (hasRIThread && riThread.Equals(jxcore::JXThread::GetCurrent())) {
+    node::commons::riThreadId = -2;
+  }
 }
 
 // memory vs performance ?

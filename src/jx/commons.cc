@@ -41,6 +41,7 @@ int64_t commons::maxMemory = -1;
 int commons::threadPoolCount = 0;
 BTStore *commons::mapData[MAX_JX_THREADS + 1];
 bool commons::embedded_multithreading_ = false;
+int commons::riThreadId = -2;
 bool commons::self_hosted_process_ = true;
 int commons::threadIdCounter = 0;
 static bool jxcore_multithreaded = false;
