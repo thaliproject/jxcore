@@ -1,5 +1,10 @@
 // Copyright & License details are available under JXCORE_LICENSE file
 
+if (process.platform === 'ios') {
+  console.error('Skipping: the test does not work on iOS');
+  process.exit(0);
+}
+
 var common = require('../common');
 var assert = require('assert');
 var path = require('path');
