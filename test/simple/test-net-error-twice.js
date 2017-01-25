@@ -1,5 +1,9 @@
 // Copyright & License details are available under JXCORE_LICENSE file
 
+if (process.platform === 'ios') {
+  console.error('Skipping: this test passes but causes subsequent tests to fail on iOS');
+  process.exit(0);
+}
 
 var common = require('../common');
 var assert = require('assert');
