@@ -16,8 +16,8 @@ process.env.TMP = '';
 assert.equal(os.tmpdir(), '/temp');
 process.env.TEMP = '';
 
-if (process.platform === "android") {
-  // Skip this step on Android since the expected result is the
+if (process.platform === "android" || process.platform === "ios") {
+  // Skip this step on Android/iOS since the expected result is the
   // relative path to the dir where jxcore is executed. 
 } else {
   assert.equal(os.tmpdir(), t);

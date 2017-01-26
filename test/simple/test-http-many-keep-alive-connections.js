@@ -5,7 +5,8 @@ var common = require('../common');
 var assert = require('assert');
 var http = require('http');
 
-var expected = 10000;
+var expected = (process.platform === 'ios' || 
+                process.platform === 'android') ? 500 : 10000;
 var responses = 0;
 var requests = 0;
 var connection;
