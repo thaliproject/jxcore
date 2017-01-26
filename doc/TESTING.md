@@ -83,7 +83,19 @@ $ ~/android-sdks/platform-tools/adb shell
 shell@android:/ $ cd /data/local/tmp/jxcore
 shell@android:/data/local/tmp/jxcore $ ./jx test/test.js jxcore
 ```
-    
+
+### iOS
+
+Compile for iOS with:
+
+```
+build_scripts/ios_compile.sh --embed-leveldown
+```
+
+Then open `tools/ios-test/iOS-Test.xcodeproj`. Select your desired target scheme - e.g. the iPhone 5 (10.2) simulator - and run the app. The test outpus will appear in the debug console in Xcode.
+
+
+
 ## Native Interface
 
 Currently native interface tests are *nix only. (We would appreciate if somebody would add Windows 

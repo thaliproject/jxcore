@@ -1,5 +1,10 @@
 // Copyright & License details are available under JXCORE_LICENSE file
 
+if (process.platform === 'ios') {
+  console.error('Skipping: the test is flaky on iOS');
+  process.exit(0);
+}
+
 if (!process.versions.openssl) {
   console.error('Skipping: node compiled without OpenSSL.');
   process.exit(0);
