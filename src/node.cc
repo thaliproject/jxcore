@@ -340,12 +340,13 @@ MakeCallback(node::commons* com, JS_HANDLE_OBJECT_REF host, const char* name,
   if (com->using_domains) {
     if (argc > 0) {
       // TODO(obastemur) improve perf for domains
-      MozJS::Value* args = (MozJS::Value*)malloc(sizeof(MozJS::Value) * (argc));
+      MozJS::Value* args = new MozJS::Value[argc];
+
       for (int i = 0; i < argc; i++)
         args[i] = MozJS::Value(argv[i], JS_GET_STATE_MARKER());
       JS_HANDLE_VALUE ret_val =
           MakeCallback(com, host, STD_TO_STRING(name), argc, args);
-      free(args);
+      delete[] args;
       return ret_val;
     } else {
       return MakeCallback(com, host, STD_TO_STRING(name), 0, NULL);
