@@ -159,4 +159,7 @@ rm -rf $ARM64
 rm -rf $INTEL32
 rm -rf $INTEL64
 
+# This ensures that sources are found while debugging
+mkdir out
+
 LOG $GREEN_COLOR "JXcore iOS binaries are ready under $FATBIN"
