@@ -277,6 +277,8 @@ void commons::Dispose() {
   JS_CLEAR_PERSISTENT(JSONparse);
   JS_CLEAR_PERSISTENT(process_);
 
+  if (!pipeConstructor.IsEmpty()) JS_CLEAR_PERSISTENT(pipeConstructor);
+
   stringOPS(false);
 }
 
