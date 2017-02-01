@@ -425,12 +425,10 @@ bool Value::Equals(Value *that) const {
 int32_t Value::Int32Value() {
   if (empty_) return 0;
 
-  if (value_.isNumber()) {
-    int32_t xv = (int32_t)value_.toNumber();
-#ifdef JS_CPU_ARM
-    if (xv == 0) xv = value_.toInt32();
-#endif
-    return xv;
+  if (value_.isInt32()) {
+    return value_.toInt32();
+  } else if (value_.isNumber()) {
+    return (int32_t)value_.toNumber();
   } else if (value_.isBoolean()) {
     return value_.toBoolean() ? 1 : 0;
   } else if (value_.isString()) {
@@ -459,12 +457,10 @@ uint32_t Value::Uint32Value() {
 }
 
 int64_t Value::IntegerValue() {
-  if (value_.isNumber()) {
-    int64_t xv = (int64_t)value_.toNumber();
-#ifdef JS_CPU_ARM
-    if (xv == 0) xv = value_.toInt32();
-#endif
-    return xv;
+  if (value_.isInt32()) {
+    return value_.toInt32();
+  } else if (value_.isNumber()) {
+    return (int64_t)value_.toNumber();
   }
 
   return Int32Value();
@@ -475,8 +471,10 @@ bool Value::BooleanValue() {
 
   if (value_.isBoolean())
     return value_.toBoolean();
-  else if (value_.isNumber())
+  else if (value_.isInt32())
     return value_.toInt32() != 0;
+  else if (value_.isNumber())
+    return ((int64_t)value_.toNumber()) != 0;
 
   return !value_.isNullOrUndefined();
 }
