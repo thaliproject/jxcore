@@ -1052,13 +1052,6 @@ void Value::empty_finalize(JSFreeOp *fop, JSObject *obj) {
       JSObject *robj = __.toObjectOrNull();
       if (robj != nullptr) {
         if (JS_HasPrivate(obj)) free(JS_GetPrivate(robj));
-
-        int *tid = (int *)JS_GetRuntimePrivate(fop->runtime());
-        JSContext *ctx = Isolate::GetByThreadId(*tid)->GetRaw();
-
-        JS::Heap<JS::Value> hval;
-        hval = JS::ObjectOrNullValue(robj);
-        JS::RemoveValueRootRT(JS_GetRuntime(ctx), &hval);
       }
     }
   }
@@ -1203,9 +1196,8 @@ JSObject *Value::NewEmptyPropertyObject(JSContext *ctx, JSPropertyOp add_get,
 
   JS_SetPrivate(reserved_obj, emp);
 
-  JS::Heap<JS::Value> rval;
+  JS::RootedValue rval(ctx);
   rval = JS::ObjectOrNullValue(reserved_obj);
-  JS::AddNamedValueRoot(ctx, &rval, nullptr);
   JS_SetReservedSlot(obj, GC_SLOT_JS_CLASS, rval);
 
   return obj;
