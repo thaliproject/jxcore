@@ -1,5 +1,14 @@
 JXcore (http://jxcore.io)
 
+----JXcore 3.1.10
+- Fix crashing bug in MozValue.cc.
+- Clean up integer conversions in SpiderMonkey proxy.
+- Fix another SpiderMonkey assert on iOS.
+- iOS build: ensure that sources around found during debugging.
+- release commons::pipeConstructor when commons is disposed.
+- Avoid port to fd mapping in restartable instances.
+- Add APIs to manage child engine (SpiderMonkey only).
+
 ----JXcore 3.1.9
 - crypto: release SecureContext::psk_server_cb_
 - Fix SpiderMonkey assert on iOS arm64
