@@ -4,7 +4,11 @@ var path = require('path');
 var assert = require('assert');
 var fs=require('fs');
 
-exports.testDir = path.dirname(__filename);
+if (process.platform === "ios") {
+  exports.testDir = path.join(require('os').tmpdir(), 'test');
+} else {
+  exports.testDir = path.dirname(__filename);
+}
 exports.fixturesDir = path.join(exports.testDir, 'fixtures');
 exports.libDir = path.join(exports.testDir, '../lib');
 exports.tmpDir = path.join(exports.testDir, 'tmp');

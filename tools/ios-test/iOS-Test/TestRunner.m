@@ -227,9 +227,8 @@ static NSCondition *operationCheck;
 static NSMutableArray *scriptsQueue;
 static NSMutableArray *nativeCallsQueue;
 static NSString *requiredFile;
-//static float delay = 0;
 
-+ (NSArray*) listTests:(NSString*)path
++ (NSArray*) listTests:(NSString*) path
 {
   NSArray *dirContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:NULL];
   NSPredicate *filter = [NSPredicate predicateWithFormat:@"self BEGINSWITH 'test-' AND self ENDSWITH '.js'"];
@@ -237,7 +236,7 @@ static NSString *requiredFile;
   return tests;
 }
 
-+ (void)startEngine:(NSString*)fileName
++ (void) startEngine:(NSString*) fileName
 {
 
   assert(mainEngineInitialized == false && "You can start JXcore main engine only once");
@@ -250,22 +249,31 @@ static NSString *requiredFile;
   nativeCallsQueue = [[NSMutableArray alloc] init];
 
   NSString *sandboxPath = NSHomeDirectory();
-  //NSLog(@"sandbox %@", sandboxPath);
 
   NSString *filePath = [[NSBundle mainBundle] pathForResource:fileName ofType:@"js"];
-  //NSLog(@"filePath %@", filePath);
 
   NSString *homeFolder = sandboxPath;
-
   NSUInteger location = [filePath rangeOfString:[NSString stringWithFormat:@"/%@.js", fileName]].location;
-  //NSLog(@"location %ld", (unsigned long) location);
-
   if (location > 0) {
     homeFolder = [NSString stringWithFormat:@"%@/",[filePath substringToIndex:location]];
-    //NSLog(@"fileDir %@", homeFolder);
   }
 
+  // We need to copy the test folder from the Application bundle to a temp folder
+  // where the tests have write access
+  NSLog(@"Copying test files to temporary dir...");
+  NSString *srcTestsPath = [NSString stringWithFormat:@"%@test", homeFolder];
+  NSString *dstTestsPath = [NSString stringWithFormat:@"%@test", NSTemporaryDirectory()];
 
+  BOOL isDir;
+  if ([[NSFileManager defaultManager] fileExistsAtPath:dstTestsPath isDirectory:&isDir] && isDir) {
+    [[NSFileManager defaultManager] removeItemAtPath:dstTestsPath error:nil];
+  }
+
+  NSError *copyError = nil;
+  if (![[NSFileManager defaultManager] copyItemAtPath:srcTestsPath toPath:dstTestsPath error:&copyError]) {
+    NSLog(@"Error copying files: %@", [copyError localizedDescription]);
+    exit(1);
+  }
 
   NSString *fileContents = @"console.log('Main engine script done.');";
 
@@ -274,39 +282,37 @@ static NSString *requiredFile;
   JX_DefineMainFile([fileContents UTF8String]);
   JX_StartEngine();
 
-
   int passed = 0;
   int failed = 0;
   //int skipped = 0;
   NSMutableArray *failedTests = [NSMutableArray new];
-
-  //NSString *requiredFileTemplate = @"setTimeout(function() { throw new Error('Test timed out!'); }, 60*1000); require('test/simple/%@');";
-  //NSString *requiredFileTemplate = @"setTimeout(function() { console.error('Test timed out!'); process.exit(1); }, 60*1000); require('test/simple/%@');";
   NSString *requiredFileTemplate = @"require('test/simple/%@');";
-  NSString *simpleTestsPath = [NSString stringWithFormat:@"%@/test/simple/",homeFolder];
+  NSString *simpleTestsPath = [NSString stringWithFormat:@"%@/simple/", dstTestsPath];
   int i;
 
   NSArray *tests = [self listTests:simpleTestsPath];
 
   for (i = 0; i < (int)[tests count]; i++)
   {
-    NSLog([NSString stringWithFormat:@"%d: %@", i, [tests objectAtIndex:i]]);
+    NSLog(@"%@", [NSString stringWithFormat:@"%d: %@", i, [tests objectAtIndex:i]]);
   }
 
-  NSLog(@"Running %d tests...", [tests count]);
+  NSString *testTmpFolder = [NSString stringWithFormat:@"%@%@", dstTestsPath, @"/tmp"];
+  NSLog(@"Running %d tests...", (int)[tests count]);
   //for (i = 0; i < 300; i++)
   //for (i = 300; i < (int)[tests count]; i++)
   for (i = 0; i < (int)[tests count]; i++)
   {
-    NSString *testTmpFolder = [NSString stringWithFormat:@"%@/%@", homeFolder, @"test/tmp"];
-    BOOL isDir;
+    // Remove and re-create the 'test/tmp' folder
     if ([[NSFileManager defaultManager] fileExistsAtPath:testTmpFolder isDirectory:&isDir] && isDir) {
-      //NSLog(@"delete tmp folder");
       [[NSFileManager defaultManager] removeItemAtPath:testTmpFolder error:nil];
     }
-    //NSLog(@"create tmp folder");
     NSError *error = nil;
     [[NSFileManager defaultManager] createDirectoryAtPath:testTmpFolder withIntermediateDirectories:YES attributes:nil error:&error];
+    if (error != nil) {
+      NSLog(@"Unable to create tmp dir %@", error.debugDescription);
+      exit(1);
+    }
 
     requiredFile = [NSString stringWithFormat:requiredFileTemplate, [tests objectAtIndex:i]];
     NSLog(@"Test %d: %@", i, [tests objectAtIndex:i]);
@@ -325,7 +331,6 @@ static NSString *requiredFile;
       failed++;
       NSString *failedTest = [NSString stringWithFormat:@"%d %@", i, [tests objectAtIndex:i]];
       [failedTests addObject:failedTest];
-      //break;
     }
     NSLog(@"Passed %d | Failed %d", passed, failed);
   }
@@ -345,13 +350,12 @@ static NSString *requiredFile;
 
   JX_InitializeNewEngine();  JX_DefineMainFile([requiredFile UTF8String]);
   JX_StartEngine();
-  //NSLog(@"Engine started.");
 
-  while(JX_LoopOnce() != 0) {[NSThread sleepForTimeInterval:0.01f];};
-  //NSLog(@"Loop done.");
+  while(JX_LoopOnce() != 0) {
+      [NSThread sleepForTimeInterval:0.01f];
+  }
 
   JX_StopEngine();
-  //NSLog(@"Engine done.");
 
   [operationCheck lock];
   [operationCheck signal];
