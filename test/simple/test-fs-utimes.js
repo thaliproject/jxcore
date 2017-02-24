@@ -8,6 +8,16 @@ var fs = require('fs');
 
 var is_windows = process.platform === 'win32';
 
+// the tests assume that __filename belongs to the user running the tests
+// this should be a fairly safe assumption; testing against a temp file
+// would be even better though (node doesn't have such functionality yet)
+// on iOS devices that assumption is not valid, therefore we need to use
+// a different file path.
+var file_path = __filename;
+if (process.platform === 'ios') {
+    file_path = common.testDir + '/simple/test-fs-utimes.js';
+}
+
 var tests_ok = 0;
 var tests_run = 0;
 
@@ -47,17 +57,14 @@ function expect_ok(syscall, resource, err, atime, mtime) {
   }
 }
 
-// the tests assume that __filename belongs to the user running the tests
-// this should be a fairly safe assumption; testing against a temp file
-// would be even better though (node doesn't have such functionality yet)
 function runTest(atime, mtime, callback) {
   var fd, err;
   //
   // test synchronized code paths, these functions throw on failure
   //
   function syncTests() {
-    fs.utimesSync(__filename, atime, mtime);
-    expect_ok('utimesSync', __filename, undefined, atime, mtime);
+    fs.utimesSync(file_path, atime, mtime);
+    expect_ok('utimesSync', file_path, undefined, atime, mtime);
     tests_run++;
 
     // some systems don't have futimes
@@ -93,17 +100,17 @@ function runTest(atime, mtime, callback) {
   //
   // test async code paths
   //
-  fs.utimes(__filename, atime, mtime, function(err) {
-    expect_ok('utimes', __filename, err, atime, mtime);
+  fs.utimes(file_path, atime, mtime, function(err) {
+    expect_ok('utimes', file_path, err, atime, mtime);
 
     fs.utimes('foobarbaz', atime, mtime, function(err) {
       expect_errno('utimes', 'foobarbaz', err, 'ENOENT');
 
       // don't close this fd
       if (is_windows) {
-        fd = fs.openSync(__filename, 'r+');
+        fd = fs.openSync(file_path, 'r+');
       } else {
-        fd = fs.openSync(__filename, 'r');
+        fd = fs.openSync(file_path, 'r');
       }
 
       fs.futimes(fd, atime, mtime, function(err) {
@@ -123,7 +130,7 @@ function runTest(atime, mtime, callback) {
   tests_run++;
 }
 
-var stats = fs.statSync(__filename);
+var stats = fs.statSync(file_path);
 
 runTest(new Date('1982/09/10 13:37'), new Date('1982/09/10 13:37'), function() {
   runTest(new Date(), new Date(), function() {
