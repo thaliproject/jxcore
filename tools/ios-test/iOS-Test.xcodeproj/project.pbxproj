@@ -25,7 +25,6 @@
 		5EF186E01E30305500A5F0DE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5EF186DE1E30305500A5F0DE /* Main.storyboard */; };
 		5EF186E21E30305500A5F0DE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EF186E11E30305500A5F0DE /* Assets.xcassets */; };
 		5EF186E51E30305500A5F0DE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5EF186E31E30305500A5F0DE /* LaunchScreen.storyboard */; };
-		5EF186F21E3035DA00A5F0DE /* jxcore_callback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF186EC1E3035DA00A5F0DE /* jxcore_callback.cpp */; };
 		5EF186F41E3035DA00A5F0DE /* TestRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EF186F11E3035DA00A5F0DE /* TestRunner.m */; };
 		5EF1872C1E303B3E00A5F0DE /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EF1872B1E303B3E00A5F0DE /* libstdc++.6.0.9.tbd */; };
 		5EF187301E30403A00A5F0DE /* test in Resources */ = {isa = PBXBuildFile; fileRef = 5EF1872E1E303BEE00A5F0DE /* test */; };
@@ -55,9 +54,7 @@
 		5EF186E11E30305500A5F0DE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5EF186E41E30305500A5F0DE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5EF186E61E30305500A5F0DE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		5EF186EC1E3035DA00A5F0DE /* jxcore_callback.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = jxcore_callback.cpp; sourceTree = "<group>"; };
-		5EF186ED1E3035DA00A5F0DE /* jxcore_callback.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = jxcore_callback.hpp; sourceTree = "<group>"; };
-		5EF186EE1E3035DA00A5F0DE /* jxcore-callback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "jxcore-callback.h"; sourceTree = "<group>"; };
+		5EF186EE1E3035DA00A5F0DE /* JXcoreCallback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JXcoreCallback.h; sourceTree = "<group>"; };
 		5EF186F01E3035DA00A5F0DE /* TestRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestRunner.h; sourceTree = "<group>"; };
 		5EF186F11E3035DA00A5F0DE /* TestRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestRunner.m; sourceTree = "<group>"; };
 		5EF1872B1E303B3E00A5F0DE /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "usr/lib/libstdc++.6.0.9.tbd"; sourceTree = SDKROOT; };
@@ -109,9 +106,7 @@
 			isa = PBXGroup;
 			children = (
 				5E38548D1E395EFB001B8813 /* main.js */,
-				5EF186EC1E3035DA00A5F0DE /* jxcore_callback.cpp */,
-				5EF186ED1E3035DA00A5F0DE /* jxcore_callback.hpp */,
-				5EF186EE1E3035DA00A5F0DE /* jxcore-callback.h */,
+				5EF186EE1E3035DA00A5F0DE /* JXcoreCallback.h */,
 				5EF186F01E3035DA00A5F0DE /* TestRunner.h */,
 				5EF186F11E3035DA00A5F0DE /* TestRunner.m */,
 				5EF186D81E30305500A5F0DE /* AppDelegate.h */,
@@ -186,6 +181,7 @@
 				TargetAttributes = {
 					5EF186D11E30305500A5F0DE = {
 						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = 92DM8U9M4N;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -232,7 +228,6 @@
 				5EF186DD1E30305500A5F0DE /* ViewController.m in Sources */,
 				5EF186DA1E30305500A5F0DE /* AppDelegate.m in Sources */,
 				5EF186D71E30305500A5F0DE /* main.m in Sources */,
-				5EF186F21E3035DA00A5F0DE /* jxcore_callback.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -352,6 +347,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = "iOS-Test/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -369,6 +365,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = "iOS-Test/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
