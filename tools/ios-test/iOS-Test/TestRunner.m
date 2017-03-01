@@ -228,6 +228,8 @@ static NSCondition *operationCheck;
 static NSMutableArray *scriptsQueue;
 static NSMutableArray *nativeCallsQueue;
 static NSString *requiredFile;
+static NSString *srcTestsPath;
+static NSString *dstTestsPath;
 
 + (NSArray*) listTests:(NSString*) path
 {
@@ -238,22 +240,35 @@ static NSString *requiredFile;
 }
 
 + (void) ReportMemory {
-    struct task_basic_info info;
-    mach_msg_type_number_t size = sizeof(info);
-    kern_return_t kerr = task_info(mach_task_self(),
-                                   TASK_BASIC_INFO,
-                                   (task_info_t)&info,
-                                   &size);
-    if (kerr == KERN_SUCCESS) {
-        NSLog(@"Memory in use: %luMB", info.resident_size/1024/1024);
-    } else {
-        NSLog(@"Error with task_info(): %s", mach_error_string(kerr));
-    }
+  struct task_basic_info info;
+  mach_msg_type_number_t size = sizeof(info);
+  kern_return_t kerr = task_info(mach_task_self(),
+                                 TASK_BASIC_INFO,
+                                 (task_info_t)&info,
+                                 &size);
+  if (kerr == KERN_SUCCESS) {
+    NSLog(@"Memory in use: %luMB", info.resident_size/1024/1024);
+  } else {
+    NSLog(@"Error with task_info(): %s", mach_error_string(kerr));
+  }
+}
+
++ (void) CopyTestDir {
+  BOOL isDir;
+  if ([[NSFileManager defaultManager] fileExistsAtPath:dstTestsPath isDirectory:&isDir] && isDir) {
+    [[NSFileManager defaultManager] removeItemAtPath:dstTestsPath error:nil];
+  }
+
+  NSLog(@"Copying test files to temporary dir...");
+  NSError *copyError = nil;
+  if (![[NSFileManager defaultManager] copyItemAtPath:srcTestsPath toPath:dstTestsPath error:&copyError]) {
+    NSLog(@"Error copying files: %@", [copyError localizedDescription]);
+    exit(1);
+  }
 }
 
 + (void) startEngine:(NSString*) fileName
 {
-
   assert(mainEngineInitialized == false && "You can start JXcore main engine only once");
   mainEngineInitialized = true;
 
@@ -263,33 +278,12 @@ static NSString *requiredFile;
   scriptsQueue = [[NSMutableArray alloc] init];
   nativeCallsQueue = [[NSMutableArray alloc] init];
 
-  NSString *sandboxPath = NSHomeDirectory();
+  srcTestsPath = [[NSBundle mainBundle] pathForResource:@"test" ofType:nil];
+  dstTestsPath = [NSString stringWithFormat:@"%@test", NSTemporaryDirectory()];
 
-  NSString *filePath = [[NSBundle mainBundle] pathForResource:fileName ofType:@"js"];
+  [TestRunner CopyTestDir];
 
-  NSString *homeFolder = sandboxPath;
-  NSUInteger location = [filePath rangeOfString:[NSString stringWithFormat:@"/%@.js", fileName]].location;
-  if (location > 0) {
-    homeFolder = [NSString stringWithFormat:@"%@/",[filePath substringToIndex:location]];
-  }
-
-  // We need to copy the test folder from the Application bundle to a temp folder
-  // where the tests have write access
-  NSLog(@"Copying test files to temporary dir...");
-  NSString *srcTestsPath = [NSString stringWithFormat:@"%@test", homeFolder];
-  NSString *dstTestsPath = [NSString stringWithFormat:@"%@test", NSTemporaryDirectory()];
-
-  BOOL isDir;
-  if ([[NSFileManager defaultManager] fileExistsAtPath:dstTestsPath isDirectory:&isDir] && isDir) {
-    [[NSFileManager defaultManager] removeItemAtPath:dstTestsPath error:nil];
-  }
-
-  NSError *copyError = nil;
-  if (![[NSFileManager defaultManager] copyItemAtPath:srcTestsPath toPath:dstTestsPath error:&copyError]) {
-    NSLog(@"Error copying files: %@", [copyError localizedDescription]);
-    exit(1);
-  }
-
+  NSString *homeFolder = [[NSBundle mainBundle] resourcePath];
   NSString *fileContents = @"console.log('Main engine script done.');";
 
   JX_InitializeOnce([homeFolder UTF8String]);
@@ -319,6 +313,7 @@ static NSString *requiredFile;
   for (i = 0; i < (int)[tests count]; i++)
   {
     // Remove and re-create the 'test/tmp' folder
+    BOOL isDir;
     if ([[NSFileManager defaultManager] fileExistsAtPath:testTmpFolder isDirectory:&isDir] && isDir) {
       [[NSFileManager defaultManager] removeItemAtPath:testTmpFolder error:nil];
     }

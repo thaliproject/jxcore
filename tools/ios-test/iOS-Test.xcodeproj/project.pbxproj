@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5E38548E1E395EFB001B8813 /* main.js in Resources */ = {isa = PBXBuildFile; fileRef = 5E38548D1E395EFB001B8813 /* main.js */; };
 		5E5741111E380AA500BD866E /* libcares.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E5740F91E38098100BD866E /* libcares.a */; };
 		5E5741121E380AA500BD866E /* libchrome_zlib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E5740FA1E38098100BD866E /* libchrome_zlib.a */; };
 		5E5741131E380AA500BD866E /* libhttp_parser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E5740FB1E38098100BD866E /* libhttp_parser.a */; };
@@ -31,7 +30,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		5E38548D1E395EFB001B8813 /* main.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = main.js; sourceTree = "<group>"; };
 		5E5740F91E38098100BD866E /* libcares.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcares.a; path = ../../out_ios/ios/bin/libcares.a; sourceTree = "<group>"; };
 		5E5740FA1E38098100BD866E /* libchrome_zlib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libchrome_zlib.a; path = ../../out_ios/ios/bin/libchrome_zlib.a; sourceTree = "<group>"; };
 		5E5740FB1E38098100BD866E /* libhttp_parser.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libhttp_parser.a; path = ../../out_ios/ios/bin/libhttp_parser.a; sourceTree = "<group>"; };
@@ -105,7 +103,6 @@
 		5EF186D41E30305500A5F0DE /* iOS-Test */ = {
 			isa = PBXGroup;
 			children = (
-				5E38548D1E395EFB001B8813 /* main.js */,
 				5EF186EE1E3035DA00A5F0DE /* JXcoreCallback.h */,
 				5EF186F01E3035DA00A5F0DE /* TestRunner.h */,
 				5EF186F11E3035DA00A5F0DE /* TestRunner.m */,
@@ -213,7 +210,6 @@
 				5EF186E21E30305500A5F0DE /* Assets.xcassets in Resources */,
 				5EF186E01E30305500A5F0DE /* Main.storyboard in Resources */,
 				5EF187301E30403A00A5F0DE /* test in Resources */,
-				5E38548E1E395EFB001B8813 /* main.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
