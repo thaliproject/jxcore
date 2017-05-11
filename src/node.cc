@@ -1565,7 +1565,9 @@ static bool EnvEnumerator(JSContext* cx, JS::HandleObject obj) {
     JS_LOCAL_STRING key = STD_TO_STRING_WITH_LENGTH(var, length);
     jxcore::JXString jkey(key);
     const char* val = getenv(*jkey);
-    JS_NAME_SET(env, key, UTF8_TO_STRING(val));
+    if (val != NULL) {
+      JS_NAME_SET(env, key, UTF8_TO_STRING(val));
+    }
   }
   return true;
 #else  // WIN
