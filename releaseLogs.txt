@@ -1,5 +1,14 @@
 JXcore (http://jxcore.io)
 
+----JXcore 3.1.12
+- fix: NULL pointer exception in EnvEnumerator.
+- fix: contains_non_ascii() fails on iOS ARM64.
+- lib: fix guard expression in timer.unref()
+- Add symbols in iOS release build.
+
+----JXcore 3.1.11
+We skipped this version number to re-sync with the jxcore-cordova version number.
+
 ----JXcore 3.1.10
 - Fix crashing bug in MozValue.cc.
 - Clean up integer conversions in SpiderMonkey proxy.
