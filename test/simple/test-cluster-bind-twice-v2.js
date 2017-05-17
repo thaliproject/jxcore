@@ -5,6 +5,11 @@ if (process.platform === 'win32') {
   process.exit(0);
 }
 
+if(process.isEmbedded === true) {
+  console.error('Skipping: the test works only in standalone mode');
+  process.exit(0);
+}
+
 // This test starts two clustered HTTP servers on the same port. It expects the
 // first cluster to succeed and the second cluster to fail with EADDRINUSE.
 //

@@ -1,4 +1,8 @@
 // Copyright & License details are available under JXCORE_LICENSE file
+if(process.isEmbedded === true) {
+  console.error('Skipping: the test works only in standalone mode');
+  process.exit(0);
+}
 
 if (process.platform === 'win32') {
   console.error('Skipping: dgram sockets to child processes not supported on Windows.');

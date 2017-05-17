@@ -1,9 +1,15 @@
 // Copyright & License details are available under JXCORE_LICENSE file
 
+if(process.isEmbedded === true) {
+  console.error('Skipping: the test works only in standalone mode');
+  process.exit(0);
+}
 
 // Installing a custom uncaughtException handler should override the default
 // one that the cluster module installs.
 // https://github.com/joyent/node/issues/2556
+
+
 
 var common = require('../common');
 var assert = require('assert');

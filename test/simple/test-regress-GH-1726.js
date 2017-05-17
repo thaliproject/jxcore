@@ -1,6 +1,9 @@
 // Copyright & License details are available under JXCORE_LICENSE file
 
-
+if(process.isEmbedded === true) {
+  console.error('Skipping: the test works only in standalone mode');
+  process.exit(0);
+}
 // Open a chain of five Node processes each a child of the next. The final
 // process exits immediately. Each process in the chain is instructed to
 // exit when its child exits.

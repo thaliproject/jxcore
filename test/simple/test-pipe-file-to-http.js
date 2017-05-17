@@ -4,7 +4,10 @@ if (process.platform === 'win32') {
   console.error('Skipping: platform is Windows.');
   process.exit(0);
 }
-
+if(process.isEmbedded === true) {
+  console.error('Skipping: the test works only in standalone mode');
+  process.exit(0);
+}
 var common = require('../common');
 var assert = require('assert');
 var fs = require('fs');

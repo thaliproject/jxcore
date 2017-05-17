@@ -303,7 +303,7 @@
           'PREBINDING': 'NO',                       # No -Wl,-prebind
           'EMBED_BITCODE': 'YES',
           'IPHONEOS_DEPLOYMENT_TARGET': '6.0',
-          'GCC_GENERATE_DEBUGGING_SYMBOLS': 'NO',
+          'GCC_GENERATE_DEBUGGING_SYMBOLS': 'YES',
           
           'USE_HEADERMAP': 'NO',
           'OTHER_CFLAGS': [

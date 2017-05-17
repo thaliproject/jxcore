@@ -5,6 +5,11 @@ if (process.platform === 'win32') {
   process.exit(0);
 }
 
+if(process.isEmbedded === true) {
+  console.error('Skipping: the test works only in standalone mode');
+  process.exit(0);
+}
+
 var common = require('../common');
 var assert = require('assert');
 

@@ -108,9 +108,15 @@ class commons {
 
   void *agent_;
 
+  // processExitResult and processExitInvoked are only used when jxcore is embedded
+  static int processExitResult;
+  static bool processExitInvoked;
+
+  static int threadIdCounter;
   static bool ssl_initialized_;
   static bool self_hosted_process_;
   static bool embedded_multithreading_;
+  static int riThreadId;
 
   static char *embedded_source_;  // static data for entry point
   bool is_packaged_;              // marker check

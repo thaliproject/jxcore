@@ -35,5 +35,7 @@ server.listen(common.PORT, function() {
 });
 
 process.on('exit', function() {
+  // re-enable default settings before exiting
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '1';
   assert(seen_req);
 });

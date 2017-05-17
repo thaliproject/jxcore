@@ -4,6 +4,10 @@ if (process.env.CITEST) {
   console.error('Skipping test due to CITEST environmental variable.');
   process.exit();
 }
+if(process.isEmbedded === true) {
+  console.error('Skipping: the test works only in standalone mode');
+  process.exit(0);
+}
 
 var common = require('../common');
 var assert = require('assert');

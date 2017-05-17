@@ -425,12 +425,10 @@ bool Value::Equals(Value *that) const {
 int32_t Value::Int32Value() {
   if (empty_) return 0;
 
-  if (value_.isNumber()) {
-    int32_t xv = (int32_t)value_.toNumber();
-#ifdef JS_CPU_ARM
-    if (xv == 0) xv = value_.toInt32();
-#endif
-    return xv;
+  if (value_.isInt32()) {
+    return value_.toInt32();
+  } else if (value_.isNumber()) {
+    return (int32_t)value_.toNumber();
   } else if (value_.isBoolean()) {
     return value_.toBoolean() ? 1 : 0;
   } else if (value_.isString()) {
@@ -459,12 +457,10 @@ uint32_t Value::Uint32Value() {
 }
 
 int64_t Value::IntegerValue() {
-  if (value_.isNumber()) {
-    int64_t xv = (int64_t)value_.toNumber();
-#ifdef JS_CPU_ARM
-    if (xv == 0) xv = value_.toInt32();
-#endif
-    return xv;
+  if (value_.isInt32()) {
+    return value_.toInt32();
+  } else if (value_.isNumber()) {
+    return (int64_t)value_.toNumber();
   }
 
   return Int32Value();
@@ -475,8 +471,10 @@ bool Value::BooleanValue() {
 
   if (value_.isBoolean())
     return value_.toBoolean();
-  else if (value_.isNumber())
+  else if (value_.isInt32())
     return value_.toInt32() != 0;
+  else if (value_.isNumber())
+    return ((int64_t)value_.toNumber()) != 0;
 
   return !value_.isNullOrUndefined();
 }
@@ -1054,13 +1052,6 @@ void Value::empty_finalize(JSFreeOp *fop, JSObject *obj) {
       JSObject *robj = __.toObjectOrNull();
       if (robj != nullptr) {
         if (JS_HasPrivate(obj)) free(JS_GetPrivate(robj));
-
-        int *tid = (int *)JS_GetRuntimePrivate(fop->runtime());
-        JSContext *ctx = Isolate::GetByThreadId(*tid)->GetRaw();
-
-        JS::Heap<JS::Value> hval;
-        hval = JS::ObjectOrNullValue(robj);
-        JS::RemoveValueRootRT(JS_GetRuntime(ctx), &hval);
       }
     }
   }
@@ -1205,9 +1196,8 @@ JSObject *Value::NewEmptyPropertyObject(JSContext *ctx, JSPropertyOp add_get,
 
   JS_SetPrivate(reserved_obj, emp);
 
-  JS::Heap<JS::Value> rval;
+  JS::RootedValue rval(ctx);
   rval = JS::ObjectOrNullValue(reserved_obj);
-  JS::AddNamedValueRoot(ctx, &rval, nullptr);
   JS_SetReservedSlot(obj, GC_SLOT_JS_CLASS, rval);
 
   return obj;

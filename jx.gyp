@@ -115,6 +115,7 @@
       'src/jx/memory_store.cc',
       'src/jx/jxp_compress.cc',
       'src/jx/error_definition.cc',
+      'src/jx/jx_thread.cc',
 
       'src/wrappers/handle_wrap.cc',
       'src/wrappers/thread_wrap.cc',
@@ -128,7 +129,6 @@
       'src/wrappers/tcp_wrap.cc',
       'src/wrappers/udp_wrap.cc',
       'src/wrappers/jxutils_wrap.cc',
-      'src/wrappers/crypto_extension.cc',
       'src/wrappers/process_wrap.cc',
       'src/wrappers/signal_wrap.cc',
       'src/wrappers/node_file.cc',

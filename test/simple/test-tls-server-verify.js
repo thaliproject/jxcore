@@ -1,3 +1,4 @@
+
 // Copyright & License details are available under JXCORE_LICENSE file
 
 console.error('Skipping: not supported on any platform.');
@@ -7,7 +8,10 @@ if (!process.versions.openssl) {
   console.error('Skipping: node compiled without OpenSSL.');
   process.exit(0);
 }
-
+if(process.isEmbedded === true) {
+  console.error('Skipping: the test works only in standalone mode');
+  process.exit(0);
+}
 // This is a rather complex test which sets up various TLS servers with node
 // and connects to them using the 'openssl s_client' command line utility
 // with various keys. Depending on the certificate authority and other
