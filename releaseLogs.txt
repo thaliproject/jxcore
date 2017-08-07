@@ -1,5 +1,13 @@
 JXcore (http://jxcore.io)
 
+----JXcore 3.1.14
+- Android O: workaround for failing API.
+- Test tool: minor UI fix.
+- Fix for iOS 11.
+
+----JXcore 3.1.13
+Skipped.
+
 ----JXcore 3.1.12
 - fix: NULL pointer exception in EnvEnumerator.
 - fix: contains_non_ascii() fails on iOS ARM64.
