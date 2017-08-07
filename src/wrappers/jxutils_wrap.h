@@ -25,9 +25,9 @@ class JXUtilsWrap {
   static DEFINE_JS_METHOD(SetMaxHeaderLength);
 
   static DEFINE_JS_METHOD(GetUniqueNext);
-
+#ifndef __IOS__
   static DEFINE_JS_METHOD(ExecSystem);
-
+#endif
   static DEFINE_JS_METHOD(BeforeApplicationStart);
 
   static DEFINE_JS_METHOD(SetSourceExpiration);
@@ -42,8 +42,9 @@ class JXUtilsWrap {
     SET_CLASS_METHOD("getCPU", GetCPU, 2);
     SET_CLASS_METHOD("runLoop", RunLoop, 0);
     SET_CLASS_METHOD("execSync", ExecSync, 1);
+#ifndef __IOS__
     SET_CLASS_METHOD("execSystem", ExecSystem, 1);
-
+#endif
     SET_CLASS_METHOD("print", PrintLog, 1);
     SET_CLASS_METHOD("print_err_warn", PrintError, 1);
 

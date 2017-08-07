@@ -50,8 +50,10 @@ typedef int mode_t;
 #include "node_script.h"
 
 #ifdef __APPLE__
-#include <crt_externs.h>
-#define environ (*_NSGetEnviron())
+  #ifndef __IOS__
+  #include <crt_externs.h>
+  #define environ (*_NSGetEnviron())
+  #endif
 #elif !defined(_MSC_VER)
 extern char** environ;
 #endif
@@ -1554,7 +1556,9 @@ static bool EnvEnumerator(JSContext* cx, JS::HandleObject obj) {
   JS_DEFINE_STATE_MARKER_(cx);
   MozJS::Value env(obj, cx);
 
-#ifdef __POSIX__
+#ifdef __IOS__
+  return true;
+#elif __POSIX__
   int size = 0;
   while (environ[size]) size++;
 

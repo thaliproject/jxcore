@@ -41,6 +41,7 @@ void JXUtilsWrap::exec(const char *cmd, int *ec, std::string &result) {
 #endif
 }
 
+#ifndef __IOS__
 JS_METHOD(JXUtilsWrap, ExecSystem) {
   if (!args.IsString(0)) {
     THROW_EXCEPTION("Missing parameters (execSystem) expects (string).");
@@ -59,6 +60,7 @@ JS_METHOD(JXUtilsWrap, ExecSystem) {
   RETURN_PARAM(STD_TO_INTEGER(ec));
 }
 JS_METHOD_END
+#endif
 
 JS_METHOD(JXUtilsWrap, ExecSync) {
   if (!args.IsString(0)) {
