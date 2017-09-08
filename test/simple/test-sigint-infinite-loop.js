@@ -1,5 +1,10 @@
 // Copyright & License details are available under JXCORE_LICENSE file
 
+if(process.isEmbedded === true) {
+  console.error('Skipping: the test works only in standalone mode');
+  process.exit(0);
+}
+
 // This test is to assert that we can SIGINT a script which loops forever.
 // Ref(http):
 // groups.google.com/group/nodejs-dev/browse_thread/thread/e20f2f8df0296d3f

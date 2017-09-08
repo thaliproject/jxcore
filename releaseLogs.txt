@@ -1,10 +1,48 @@
 JXcore (http://jxcore.io)
 
+----JXcore 3.1.14
+- Android O: workaround for failing API.
+- Test tool: minor UI fix.
+- Fix for iOS 11.
+
+----JXcore 3.1.13
+Skipped.
+
+----JXcore 3.1.12
+- fix: NULL pointer exception in EnvEnumerator.
+- fix: contains_non_ascii() fails on iOS ARM64.
+- lib: fix guard expression in timer.unref()
+- Add symbols in iOS release build.
+
+----JXcore 3.1.11
+We skipped this version number to re-sync with the jxcore-cordova version number.
+
+----JXcore 3.1.10
+- Fix crashing bug in MozValue.cc.
+- Clean up integer conversions in SpiderMonkey proxy.
+- Fix another SpiderMonkey assert on iOS.
+- iOS build: ensure that sources around found during debugging.
+- release commons::pipeConstructor when commons is disposed.
+- Avoid port to fd mapping in restartable instances.
+- Add APIs to manage child engine (SpiderMonkey only).
+
+----JXcore 3.1.9
+- crypto: release SecureContext::psk_server_cb_
+- Fix SpiderMonkey assert on iOS arm64
+- Properly intialize MozJS::Value arrays
+- test: fixes for iOS and Android.
+- deps: clean up javascript file.
+- test: close sockets before exiting.
+- test: set/reset default process object settings.
+- test: disable incompatible tests on mobile platforms.
+- test tool: better symbol for skipped tests.
+- mobile build: better make parallelization defaults
+- crypto: remove HKDF support
+
 ----JXcore 3.1.8
 - improving resursion overflow warning.
 - Fix for SM bug 1057580.
 - Fix: release root after object has been deleted.
-
 
 ----JXcore 3.1.7
 - fix: round float value in setTimeout/setInterval to int.

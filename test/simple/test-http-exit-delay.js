@@ -37,6 +37,8 @@ server.listen(common.PORT, 'localhost', function() {
 process.on('exit', function() {
   var d = process.hrtime(start);
   assert.equal(d[0], 0);
-  assert(d[1] / 1e9 < 0.03);
+  var subSecDelay = (process.platform === 'ios' || 
+                     process.platform === 'android') ? 0.10 : 0.03;
+  assert(d[1] / 1e9 < subSecDelay);
   console.log('ok');
 });

@@ -22,6 +22,8 @@ typedef int mode_t;
 
 namespace node {
 
+int commons::processExitResult = 0;
+bool commons::processExitInvoked = false;
 bool commons::ssl_initialized_ = false;
 char *commons::embedded_source_ = NULL;
 jxcore_instance_status commons::process_status_ = JXCORE_INSTANCE_NONE;
@@ -39,8 +41,9 @@ int64_t commons::maxMemory = -1;
 int commons::threadPoolCount = 0;
 BTStore *commons::mapData[MAX_JX_THREADS + 1];
 bool commons::embedded_multithreading_ = false;
+int commons::riThreadId = -2;
 bool commons::self_hosted_process_ = true;
-static int threadIdCounter = 0;
+int commons::threadIdCounter = 0;
 static bool jxcore_multithreaded = false;
 static bool main_thread_created_ = false;
 
@@ -124,7 +127,7 @@ void InitThreadId(const int threadId, bool lock_mutex = true) {
 
 int CreateNewThreadId() {
   uv_mutex_lock(&comLock);
-  int threadId = threadIdCounter++;
+  int threadId = commons::threadIdCounter++;
   InitThreadId(threadId, false);
   uv_mutex_unlock(&comLock);
 
@@ -273,6 +276,8 @@ void commons::Dispose() {
   JS_CLEAR_PERSISTENT(JSONstringify);
   JS_CLEAR_PERSISTENT(JSONparse);
   JS_CLEAR_PERSISTENT(process_);
+
+  if (!pipeConstructor.IsEmpty()) JS_CLEAR_PERSISTENT(pipeConstructor);
 
   stringOPS(false);
 }

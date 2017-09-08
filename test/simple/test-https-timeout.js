@@ -8,7 +8,6 @@ if (!process.versions.openssl) {
 var common = require('../common');
 var assert = require('assert');
 var fs = require('fs');
-var exec = require('child_process').exec;
 var https = require('https');
 
 var options = {

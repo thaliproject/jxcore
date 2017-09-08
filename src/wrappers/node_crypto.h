@@ -83,7 +83,10 @@ class SecureContext : ObjectWrap {
     }
   }
 
-  ~SecureContext() { FreeCTXMem(); }
+  ~SecureContext() {
+    FreeCTXMem();
+    if (!psk_server_cb_.IsEmpty()) JS_CLEAR_PERSISTENT(psk_server_cb_);
+  }
 
  private:
   JS_PERSISTENT_FUNCTION(psk_server_cb_);

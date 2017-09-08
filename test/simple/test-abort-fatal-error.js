@@ -14,6 +14,10 @@ if (process.versions.v8 && parseFloat(process.versions.v8) > 3.15) {
     console.error('Skipping: engine V8 > 3.15.');
     process.exit(0);
 }
+if(process.isEmbedded === true) {
+  console.error('Skipping: the test works only in standalone mode');
+  process.exit(0);
+}
 
 var assert = require('assert');
 var common = require('../common');

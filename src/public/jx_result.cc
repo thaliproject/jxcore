@@ -279,8 +279,7 @@ JX_CallFunction(JXValue *fnc, JXValue *params, const int argc, JXValue *out) {
 
   JS_HANDLE_VALUE res;
   RUN_IN_SCOPE({
-    JS_HANDLE_VALUE *arr =
-        (JS_HANDLE_VALUE *)malloc(sizeof(JS_HANDLE_VALUE) * argc);
+    JS_HANDLE_VALUE *arr = new JS_HANDLE_VALUE[argc];
 
     for (int i = 0; i < argc; i++) {
       if (params[i].type_ == RT_Undefined || params[i].type_ == RT_Null ||
@@ -297,7 +296,7 @@ JX_CallFunction(JXValue *fnc, JXValue *params, const int argc, JXValue *out) {
       }
     }
     res = wrap->Call(argc, arr, &done);
-    free(arr);
+    delete[] arr;
 
     if (!done) {
       JX_SetUndefined(out);

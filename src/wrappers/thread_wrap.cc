@@ -21,7 +21,17 @@ JS_METHOD(ThreadWrap, CpuCount) {
   int count;
 
   uv_err_t er = uv_cpu_info(&cpu_infos, &count);
-  if (er.code != UV_OK) RETURN();
+  if (er.code != UV_OK) {
+#ifdef __ANDROID__
+    // On Android O, for security reason, 'uv_cpu_info' fails when trying
+    // to access /proc/stat, but given we only need the CPU count, we can 
+    // workaround it calling directly 'sysconf'.
+    count = sysconf(_SC_NPROCESSORS_ONLN);
+    RETURN_PARAM(STD_TO_INTEGER(count));
+#else
+    RETURN();
+#endif
+  }
 
   uv_free_cpu_info(cpu_infos, count);
 

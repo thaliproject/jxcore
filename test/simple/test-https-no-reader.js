@@ -42,6 +42,7 @@ server.listen(common.PORT, function() {
       // Read buffer should be somewhere near high watermark
       // (i.e. should not leak)
       assert(res._readableState.length < 100 * 1024);
+      server.close();
       process.exit(0);
     }, 5000);
   });

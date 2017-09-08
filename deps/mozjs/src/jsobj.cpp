@@ -4534,11 +4534,10 @@ bool jxcore_buffer_setter(JSContext *cx, JS::Handle<JSObject*> obj, JS::Handle<j
       void *data = store->extData_;
 
       uint32_t number;
-      if (vp.isNumber()) {
+      if (vp.isInt32()) {
+        number = vp.toInt32();
+      } else if (vp.isNumber()) {
         number = vp.toNumber();
-#ifdef JS_CPU_ARM
-    	if (number == 0) number = vp.toInt32();
-#endif
       } else if (vp.isString()) {
         char *str_ = JS_EncodeString(cx, vp.toString());
         number = atol(str_);

@@ -93,7 +93,7 @@ var writeStats = function(obj) {
   var percent = jxcore.utils.console.setColor("%% %s", "blue");
   var success = jxcore.utils.console.setColor("+ %s", "green");
   var failures = jxcore.utils.console.setColor("- %s", "red");
-  var skipped = jxcore.utils.console.setColor("- %s", "yellow");
+  var skipped = jxcore.utils.console.setColor("= %s", "yellow");
   var s = util.format("[" + [ time, percent, success, failures, skipped ].join("|")
       + "] " + fname.replace(cwd, ""), pad(stats.minutes_ellapsed, 2, '0'),
       pad(stats.seconds_ellapsed, 2, '0'), pad(stats.percent, 3, ' '), pad(

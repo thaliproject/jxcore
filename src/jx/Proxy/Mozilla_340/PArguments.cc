@@ -267,12 +267,10 @@ int64_t PArguments::GetInteger(const unsigned index) {
     return 0;
   }
 
-  if (args_[index].isNumber()) {
-    int64_t xv = (int64_t)args_[index].toNumber();
-#ifdef JS_CPU_ARM
-    if (xv == 0) xv = args_[index].toInt32();
-#endif
-    return xv;
+  if (args_[index].isInt32()) {
+    return args_[index].toInt32();
+  } else if (args_[index].isNumber()) {
+    return (int64_t)args_[index].toNumber();
   }
 
   if (args_[index].isBoolean()) return args_[index].toBoolean() ? 1 : 0;

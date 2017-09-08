@@ -60,7 +60,7 @@ MAKE_INSTALL() {
   mv $TARGET_DIR out
   ./configure --static-library --dest-os=android --dest-cpu=$1 --engine-mozilla --compress-internals $CONF_EXTRAS
   ERROR_ABORT_MOVE "mv out $TARGET_DIR" $1
-  make -j 2
+  make V= -j $(getconf _NPROCESSORS_ONLN)
   ERROR_ABORT_MOVE "mv out $TARGET_DIR" $1
   
   PREFIX_DIR="out/Release"

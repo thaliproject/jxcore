@@ -5,6 +5,10 @@ if (process.cwd().indexOf('travis/')>0) {
   console.error('Skipping: running on Travis.');
   process.exit(0);
 }
+if (process.isRestartableInstance === true) {
+  console.error('Skipping: subtasks are now allowed when running the RIThread.');
+  process.exit(0);
+}
 
 var reset = true;
 var counter = 0;

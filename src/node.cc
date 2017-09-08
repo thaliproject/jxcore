@@ -50,8 +50,10 @@ typedef int mode_t;
 #include "node_script.h"
 
 #ifdef __APPLE__
-#include <crt_externs.h>
-#define environ (*_NSGetEnviron())
+  #ifndef __IOS__
+  #include <crt_externs.h>
+  #define environ (*_NSGetEnviron())
+  #endif
 #elif !defined(_MSC_VER)
 extern char** environ;
 #endif
@@ -340,12 +342,13 @@ MakeCallback(node::commons* com, JS_HANDLE_OBJECT_REF host, const char* name,
   if (com->using_domains) {
     if (argc > 0) {
       // TODO(obastemur) improve perf for domains
-      MozJS::Value* args = (MozJS::Value*)malloc(sizeof(MozJS::Value) * (argc));
+      MozJS::Value* args = new MozJS::Value[argc];
+
       for (int i = 0; i < argc; i++)
         args[i] = MozJS::Value(argv[i], JS_GET_STATE_MARKER());
       JS_HANDLE_VALUE ret_val =
           MakeCallback(com, host, STD_TO_STRING(name), argc, args);
-      free(args);
+      delete[] args;
       return ret_val;
     } else {
       return MakeCallback(com, host, STD_TO_STRING(name), 0, NULL);
@@ -1023,6 +1026,8 @@ JS_LOCAL_METHOD(Exit) {
   ENGINE_PRINT_LOGS();
   exit(args.GetInt32(0));
 #else
+  node::commons::processExitResult = args.GetInt32(0);
+  node::commons::processExitInvoked = true;
   com->expects_reset = com->threadId > 0;
   JS_TERMINATE_EXECUTION(com->threadId);
   uv_stop(com->loop);
@@ -1551,7 +1556,9 @@ static bool EnvEnumerator(JSContext* cx, JS::HandleObject obj) {
   JS_DEFINE_STATE_MARKER_(cx);
   MozJS::Value env(obj, cx);
 
-#ifdef __POSIX__
+#ifdef __IOS__
+  return true;
+#elif __POSIX__
   int size = 0;
   while (environ[size]) size++;
 
@@ -1562,7 +1569,9 @@ static bool EnvEnumerator(JSContext* cx, JS::HandleObject obj) {
     JS_LOCAL_STRING key = STD_TO_STRING_WITH_LENGTH(var, length);
     jxcore::JXString jkey(key);
     const char* val = getenv(*jkey);
-    JS_NAME_SET(env, key, UTF8_TO_STRING(val));
+    if (val != NULL) {
+      JS_NAME_SET(env, key, UTF8_TO_STRING(val));
+    }
   }
   return true;
 #else  // WIN
@@ -2009,6 +2018,9 @@ void SetupProcessObject(const int threadId, bool debug_worker) {
   }
 
   JS_NAME_SET(process, JS_STRING_ID("threadId"), STD_TO_INTEGER(threadId - 1));
+
+  JS_NAME_SET(process, JS_STRING_ID("isRestartableInstance"),
+              STD_TO_BOOLEAN(threadId == node::commons::riThreadId));
 
   // process.version
   JS_NAME_SET(process, JS_STRING_ID("version"), STD_TO_STRING(NODE_VERSION));
